@@ -18,6 +18,8 @@ import { AccountSettingsModule } from './account-settings/account-settings.modul
 import { AuthenticationModule } from './authentication/authentication.module';
 import { MiscellaneousModule } from './miscellaneous/miscellaneous.module';
 import { InputDataModule } from './input-data/input-data.module';
+import { ReportModule } from './report/report.module';
+import { GraphModule } from './graph/graph.module';
 
 @NgModule({
   declarations: [],
@@ -37,7 +39,9 @@ import { InputDataModule } from './input-data/input-data.module';
     KbModule,
     FaqModule,
     AccountSettingsModule,
-    InputDataModule
+    InputDataModule,
+    ReportModule,
+    GraphModule
   ],
 
   providers: []

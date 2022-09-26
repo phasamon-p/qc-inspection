@@ -2,13 +2,33 @@ export const locale = {
   lang: 'en',
   data: {
     MENU: {
+      // Main Manu
+      INSPECTION: {
+        SECTION: 'Inspection Machine',
+      },
+      INPUT: {
+        COLLAPSIBLE: 'Input Data',
+        BADGE: '1',
+        INPUTDATA: 'Input Data'
+      },
+      REPORT: {
+        COLLAPSIBLE: 'Report',
+        BADGE: '3',
+        DAILYREPORT: 'Daily Report',
+        JOBSUMMARY: 'Job Summary Report',
+        REPORTMACHINE: 'Report form Machine'
+      },
+      GRAPH: {
+        COLLAPSIBLE: 'Graph',
+        BADGE: '1',
+        JOBSUMMARY: 'Job Summary Graph'
+      },
+      // Default Manu
       DASHBOARD: {
         COLLAPSIBLE: 'Dashboards',
         BADGE: '2',
         ANALYTICS: 'Analytics',
         ECOMMERCE: 'eCommerce',
-        // Add Menu Translation
-        INPUTDATA: 'Input Data'
       },
       APPS: {
         SECTION: 'Apps & Pages',

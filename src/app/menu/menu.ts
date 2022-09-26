@@ -3,6 +3,106 @@ import { CoreMenu } from '@core/types';
 //? DOC: http://localhost:7777/demo/vuexy-angular-admin-dashboard-template/documentation/guide/development/navigation-menus.html#interface
 
 export const menu: CoreMenu[] = [
+  {
+    id: 'inspection-machine',
+    type: 'section',
+    title: 'Inspection Machine',
+    translate: 'MENU.INSPECTION.SECTION',
+    icon: 'package'
+  },
+  // Input Data
+  {
+    id: 'main-input-data',
+    title: 'Input Data',
+    translate: 'MENU.INPUT.COLLAPSIBLE',
+    type: 'collapsible',
+    // role: ['Admin'], //? To hide collapsible based on user role
+    icon: 'edit',
+    badge: {
+      title: '1',
+      translate: 'MENU.INPUT.BADGE',
+      classes: 'badge-light-warning badge-pill'
+    },
+    children: [
+      {
+        // If role is not assigned will be display to all
+        id: 'Input-Data',
+        title: 'Input Data',
+        translate: 'MENU.INPUT.INPUTDATA',
+        type: 'item',
+        icon: 'circle',
+        url: 'pages/input-data'
+      }
+    ]
+  },
+  // Report
+  {
+    id: 'report',
+    title: 'Report',
+    translate: 'MENU.REPORT.COLLAPSIBLE',
+    type: 'collapsible',
+    // role: ['Admin'], //? To hide collapsible based on user role
+    icon: 'file-text',
+    badge: {
+      title: '3',
+      translate: 'MENU.INPUT.BADGE',
+      classes: 'badge-light-warning badge-pill'
+    },
+    children: [
+      {
+        // If role is not assigned will be display to all
+        id: 'daily-report',
+        title: 'Daily Report',
+        translate: 'MENU.REPORT.DAILYREPORT',
+        type: 'item',
+        icon: 'circle',
+        url: 'pages/daily-report'
+      },
+      {
+        // If role is not assigned will be display to all
+        id: 'job-summary-report',
+        title: 'Job Summary Report',
+        translate: 'MENU.REPORT.JOBSUMMARY',
+        type: 'item',
+        icon: 'circle',
+        url: 'pages/jobsummary-report'
+      },
+      {
+        // If role is not assigned will be display to all
+        id: 'report-from-Machine',
+        title: 'Report From Machine',
+        translate: 'MENU.REPORT.REPORTMACHINE',
+        type: 'item',
+        icon: 'circle',
+        url: 'pages/report-machine'
+      }
+    ]
+  },
+  // Graph
+  {
+    id: 'graph',
+    title: 'Graph',
+    translate: 'MENU.GRAPH.COLLAPSIBLE',
+    type: 'collapsible',
+    // role: ['Admin'], //? To hide collapsible based on user role
+    icon: 'bar-chart',
+    badge: {
+      title: '1',
+      translate: 'MENU.GRAPH.BADGE',
+      classes: 'badge-light-warning badge-pill'
+    },
+    children: [
+      {
+        // If role is not assigned will be display to all
+        id: 'job-summary-graph',
+        title: 'Job Summary Report',
+        translate: 'MENU.GRAPH.JOBSUMMARY',
+        type: 'item',
+        icon: 'circle',
+        url: 'pages/jobsummary-graph'
+      }
+    ]
+  },
   // Dashboard
   {
     id: 'dashboard',
@@ -34,15 +134,6 @@ export const menu: CoreMenu[] = [
         type: 'item',
         icon: 'circle',
         url: 'dashboard/ecommerce'
-      },
-      {
-        // If role is not assigned will be display to all
-        id: 'Input-Data',
-        title: 'Input Data',
-        translate: 'MENU.DASHBOARD.INPUTDATA',
-        type: 'item',
-        icon: 'circle',
-        url: 'pages/input-data'
       }
     ]
   },
