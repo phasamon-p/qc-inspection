@@ -1,9 +1,10 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, first } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 
+import { AuthenticationService } from 'app/auth/service';
 import { CoreConfigService } from '@core/services/config.service';
 
 @Component({
@@ -16,7 +17,10 @@ export class AuthLoginV1Component implements OnInit {
   //  Public
   public coreConfig: any;
   public loginForm: UntypedFormGroup;
+  public loading = false;
   public submitted = false;
+  public returnUrl: string;
+  public error = '';
   public passwordTextType: boolean;
 
   // Private
@@ -28,7 +32,18 @@ export class AuthLoginV1Component implements OnInit {
    * @param {CoreConfigService} _coreConfigService
    * @param {FormBuilder} _formBuilder
    */
-  constructor(private _coreConfigService: CoreConfigService, private _formBuilder: UntypedFormBuilder) {
+   constructor(
+    private _coreConfigService: CoreConfigService,
+    private _formBuilder: UntypedFormBuilder,
+    private _route: ActivatedRoute,
+    private _router: Router,
+    private _authenticationService: AuthenticationService
+  ) {
+    // redirect to home if already logged in
+    if (this._authenticationService.currentUserValue) {
+      this._router.navigate(['/']);
+    }
+
     this._unsubscribeAll = new Subject();
 
     // Configure the layout
@@ -71,6 +86,21 @@ export class AuthLoginV1Component implements OnInit {
     if (this.loginForm.invalid) {
       return;
     }
+
+    // Login
+    this.loading = true;
+    this._authenticationService
+      .login(this.f.email.value, this.f.password.value)
+      .pipe(first())
+      .subscribe(
+        data => {
+          this._router.navigate([this.returnUrl]);
+        },
+        error => {
+          this.error = error;
+          this.loading = false;
+        }
+      );
   }
 
   // Lifecycle Hooks
@@ -79,17 +109,21 @@ export class AuthLoginV1Component implements OnInit {
   /**
    * On init
    */
-  ngOnInit(): void {
+   ngOnInit(): void {
     this.loginForm = this._formBuilder.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required]
+      email: ['admin@demo.com', [Validators.required, Validators.email]],
+      password: ['admin', Validators.required]
     });
+
+    // get return url from route parameters or default to '/'
+    this.returnUrl = this._route.snapshot.queryParams['returnUrl'] || '/';
 
     // Subscribe to config changes
     this._coreConfigService.config.pipe(takeUntil(this._unsubscribeAll)).subscribe(config => {
       this.coreConfig = config;
     });
   }
+
 
   /**
    * On destroy
