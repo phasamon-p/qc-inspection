@@ -29,11 +29,20 @@ export const menu: CoreMenu[] = [
       {
         // If role is not assigned will be display to all
         id: 'ecommerce',
-        title: 'eCommerce',
+        title: 'eCommercessss',
         translate: 'MENU.DASHBOARD.ECOMMERCE',
         type: 'item',
         icon: 'circle',
         url: 'dashboard/ecommerce'
+      },
+      {
+        // If role is not assigned will be display to all
+        id: 'Input-Data',
+        title: 'Input Data',
+        translate: 'MENU.DASHBOARD.INPUTDATA',
+        type: 'item',
+        icon: 'circle',
+        url: 'pages/input-data'
       }
     ]
   },

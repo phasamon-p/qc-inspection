@@ -6,7 +6,9 @@ export const locale = {
         COLLAPSIBLE: 'Dashboards',
         BADGE: '2',
         ANALYTICS: 'Analytics',
-        ECOMMERCE: 'eCommerce'
+        ECOMMERCE: 'eCommerce',
+        // Add Menu Translation
+        INPUTDATA: 'Input Data'
       },
       APPS: {
         SECTION: 'Apps & Pages',
