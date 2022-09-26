@@ -1,4 +1,4 @@
-# Vuexy - Angular Admin Template
+# Siriwattana - QC Inspection System
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli).
 
