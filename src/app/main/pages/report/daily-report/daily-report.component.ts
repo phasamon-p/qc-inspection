@@ -174,23 +174,24 @@ export class DailyReportComponent implements OnInit {
    */
   ngOnInit(): void {
     // Subscribe config change
-    this._coreConfigService.config.pipe(takeUntil(this._unsubscribeAll)).subscribe(config => {
+    this._coreConfigService.config.subscribe(config => {
       //! If we have zoomIn route Transition then load datatable after 450ms(Transition will finish in 400ms)
       if (config.layout.animation === 'zoomIn') {
         setTimeout(() => {
-          this._dailyReportService.onReportListChanged.pipe(takeUntil(this._unsubscribeAll)).subscribe(response => {
+          this._dailyReportService.onReportListChanged.subscribe(response => {
             this.rows = response;
             this.tempData = this.rows;
             this.exportCSVData = this.rows;
           });
         }, 450);
       } else {
-        this._dailyReportService.onReportListChanged.pipe(takeUntil(this._unsubscribeAll)).subscribe(response => {
+        this._dailyReportService.onReportListChanged.subscribe(response => {
           this.rows = response;
           this.tempData = this.rows;
           this.exportCSVData = this.rows;
         });
       }
+      console.log(this.tempData)
     });
   }
 

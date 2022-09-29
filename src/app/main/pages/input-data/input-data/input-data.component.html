@@ -9,7 +9,7 @@
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label class="form-control-label" for="TDMultiRuleName">Reject Pallet :</label>
+                                    <label class="form-control-label" for="TDMultiRuleName">Reject Pallet<span style="color: red;"> * </span>:</label>
                                     <div class="form-check form-check-inline" style="margin-left: 0.75rem;">
                                         <input class="form-check-input" type="radio" name="inlineRadioOptions"
                                             id="inlineRadio1" value="option1" checked />
@@ -27,9 +27,9 @@
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label for="status">Pallet Number</label>
-                                    <select class="form-control" [(ngModel)]="currentRow.status" name="status"
-                                        id="status">
+                                    <label for="pallernumber">Pallet Number<span style="color: red;"> * </span>:</label>
+                                    <select class="form-control" name="pallernumber"
+                                        id="pallernumber">
                                         <option>active</option>
                                         <option>inactive</option>
                                         <option>pending</option>
@@ -41,11 +41,11 @@
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label class="form-control-label" for="TDMultiRuleName">Pallet Quantity</label>
+                                    <label class="form-control-label" for="palletquantity">Pallet Quantity<span style="color: red;"> * </span>:</label>
                                     <input class="form-control input-md"
                                         [class.error]="!TDMultiRuleNameRef.valid && TDMultiRuleNameRef.touched" ngModel
                                         #TDMultiRuleNameRef="ngModel" required id="TDMultiRuleName"
-                                        name="TDMultiRuleName" type="text" placeholder="Pallet Quantity" />
+                                        name="palletquantity" type="text" placeholder="Pallet Quantity" />
                                     <span *ngIf="!TDMultiRuleNameRef.valid && TDMultiRuleNameRef.touched"
                                         class="invalid-form">
                                         <small class="form-text text-danger"
@@ -58,9 +58,9 @@
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label for="status">Grade</label>
-                                    <select class="form-control" [(ngModel)]="currentRow.status" name="status"
-                                        id="status">
+                                    <label for="grade">Grade<span style="color: red;"> * </span>:</label>
+                                    <select class="form-control" name="grade"
+                                        id="grade">
                                         <option>active</option>
                                         <option>inactive</option>
                                         <option>pending</option>
@@ -72,11 +72,11 @@
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label class="form-control-label" for="TDMultiRuleEmail">Job Number</label>
+                                    <label class="form-control-label" for="jobnumber">Job Number<span style="color: red;"> * </span>:</label>
                                     <input class="form-control input-md"
                                         [class.error]="!TDMultiRuleEmailRef.valid && TDMultiRuleEmailRef.touched"
-                                        ngModel #TDMultiRuleEmailRef="ngModel" required email id="TDMultiRuleEmail"
-                                        name="TDMultiRuleEmail" type="text" placeholder="Job Number" />
+                                        ngModel #TDMultiRuleEmailRef="ngModel" required email id="jobnumber"
+                                        name="jobnumber" type="text" placeholder="Job Number" />
                                     <span *ngIf="!TDMultiRuleEmailRef.valid && TDMultiRuleEmailRef.touched"
                                         class="invalid-form">
                                         <small class="form-text text-danger">Job Number must be valid!</small>
@@ -88,11 +88,11 @@
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label class="form-control-label" for="TDMultiRuleEmail">Job Name</label>
+                                    <label class="form-control-label" for="jobname">Job Name<span style="color: red;"> * </span>:</label>
                                     <input class="form-control input-md"
                                         [class.error]="!TDMultiRuleEmailRef.valid && TDMultiRuleEmailRef.touched"
-                                        ngModel #TDMultiRuleEmailRef="ngModel" required email id="TDMultiRuleEmail"
-                                        name="TDMultiRuleEmail" type="text" placeholder="Job Number" />
+                                        ngModel #TDMultiRuleEmailRef="ngModel" required email id="jobname"
+                                        name="jobname" type="text" placeholder="Job Name" />
                                     <span *ngIf="!TDMultiRuleEmailRef.valid && TDMultiRuleEmailRef.touched"
                                         class="invalid-form">
                                         <small class="form-text text-danger">Job Name must be valid!</small>
@@ -104,11 +104,11 @@
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label class="form-control-label" for="TDMultiRuleEmail">Job Quantity</label>
+                                    <label class="form-control-label" for="jobquantity">Job Quantity<span style="color: red;"> * </span>:</label>
                                     <input class="form-control input-md"
                                         [class.error]="!TDMultiRuleEmailRef.valid && TDMultiRuleEmailRef.touched"
-                                        ngModel #TDMultiRuleEmailRef="ngModel" required email id="TDMultiRuleEmail"
-                                        name="TDMultiRuleEmail" type="text" placeholder="Job Number" />
+                                        ngModel #TDMultiRuleEmailRef="ngModel" required email id="jobquantity"
+                                        name="jobquantity" type="text" placeholder="Job Quantity" />
                                     <span *ngIf="!TDMultiRuleEmailRef.valid && TDMultiRuleEmailRef.touched"
                                         class="invalid-form">
                                         <small class="form-text text-danger">Job Quantity must be valid!</small>
@@ -120,9 +120,9 @@
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label for="status">F Number</label>
-                                    <select class="form-control" [(ngModel)]="currentRow.status" name="status"
-                                        id="status">
+                                    <label for="fnumber">F Number<span style="color: red;"> * </span>:</label>
+                                    <select class="form-control" name="fnumber"
+                                        id="fnumber">
                                         <option>active</option>
                                         <option>inactive</option>
                                         <option>pending</option>
@@ -134,11 +134,11 @@
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label class="form-control-label" for="TDMultiRuleEmail">Delta</label>
+                                    <label class="form-control-label" for="delta">Delta<span style="color: red;"> * </span>:</label>
                                     <input class="form-control input-md"
                                         [class.error]="!TDMultiRuleEmailRef.valid && TDMultiRuleEmailRef.touched"
-                                        ngModel #TDMultiRuleEmailRef="ngModel" required email id="TDMultiRuleEmail"
-                                        name="TDMultiRuleEmail" type="text" placeholder="Job Number" />
+                                        ngModel #TDMultiRuleEmailRef="ngModel" required email id="delta"
+                                        name="delta" type="text" placeholder="Delta" />
                                     <span *ngIf="!TDMultiRuleEmailRef.valid && TDMultiRuleEmailRef.touched"
                                         class="invalid-form">
                                         <small class="form-text text-danger">Delta must be valid!</small>
@@ -150,11 +150,11 @@
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label class="form-control-label" for="TDMultiRuleEmail">Checker</label>
+                                    <label class="form-control-label" for="checker">Checker<span style="color: red;"> * </span>:</label>
                                     <input class="form-control input-md"
                                         [class.error]="!TDMultiRuleEmailRef.valid && TDMultiRuleEmailRef.touched"
-                                        ngModel #TDMultiRuleEmailRef="ngModel" required email id="TDMultiRuleEmail"
-                                        name="TDMultiRuleEmail" type="text" placeholder="Job Number" />
+                                        ngModel #TDMultiRuleEmailRef="ngModel" required email id="checker"
+                                        name="checker" type="text" placeholder="Checker" />
                                     <span *ngIf="!TDMultiRuleEmailRef.valid && TDMultiRuleEmailRef.touched"
                                         class="invalid-form">
                                         <small class="form-text text-danger">Checker must be valid!</small>
@@ -166,11 +166,11 @@
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <label class="form-control-label" for="TDMultiRuleEmail">Remark</label>
+                                    <label class="form-control-label" for="remark">Remark</label>
                                     <input class="form-control input-md"
                                         [class.error]="!TDMultiRuleEmailRef.valid && TDMultiRuleEmailRef.touched"
-                                        ngModel #TDMultiRuleEmailRef="ngModel" required email id="TDMultiRuleEmail"
-                                        name="TDMultiRuleEmail" type="text" placeholder="Job Number" />
+                                        ngModel #TDMultiRuleEmailRef="ngModel" required email id="remark"
+                                        name="remark" type="text" placeholder="Remark" />
                                     <span *ngIf="!TDMultiRuleEmailRef.valid && TDMultiRuleEmailRef.touched"
                                         class="invalid-form">
                                         <small class="form-text text-danger">Remark must be valid!</small>
@@ -194,11 +194,11 @@
                             <!-- Date-->
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label class="form-control-label" for="TDMultiRuleName">Date</label>
+                                    <label class="form-control-label" for="date">Date</label>
                                     <input class="form-control input-md"
                                         [class.error]="!TDMultiRuleNameRef.valid && TDMultiRuleNameRef.touched" ngModel
-                                        #TDMultiRuleNameRef="ngModel" required id="TDMultiRuleName"
-                                        name="TDMultiRuleName" type="text" placeholder="Date" />
+                                        #TDMultiRuleNameRef="ngModel" required id="date"
+                                        name="date" type="text" placeholder="Date" />
                                     <span *ngIf="!TDMultiRuleNameRef.valid && TDMultiRuleNameRef.touched"
                                         class="invalid-form">
                                         <small class="form-text text-danger"
@@ -209,11 +209,11 @@
                             <!-- Waste-->
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label class="form-control-label" for="TDMultiRuleName">Waste</label>
+                                    <label class="form-control-label" for="waste">Waste</label>
                                     <input class="form-control input-md"
                                         [class.error]="!TDMultiRuleNameRef.valid && TDMultiRuleNameRef.touched" ngModel
-                                        #TDMultiRuleNameRef="ngModel" required id="TDMultiRuleName"
-                                        name="TDMultiRuleName" type="text" placeholder="Waste" />
+                                        #TDMultiRuleNameRef="ngModel" required id="waste"
+                                        name="waste" type="text" placeholder="Waste" />
                                     <span *ngIf="!TDMultiRuleNameRef.valid && TDMultiRuleNameRef.touched"
                                         class="invalid-form">
                                         <small class="form-text text-danger"
@@ -227,9 +227,9 @@
                             <!-- Batch -->
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="status">Batch</label>
-                                    <select class="form-control" [(ngModel)]="currentRow.status" name="status"
-                                        id="status">
+                                    <label for="batch">Batch<span style="color: red;"> * </span>:</label>
+                                    <select class="form-control" name="batch"
+                                        id="batch">
                                         <option>active</option>
                                         <option>inactive</option>
                                         <option>pending</option>
@@ -239,11 +239,11 @@
                             <!-- Black -->
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label class="form-control-label" for="TDMultiRuleName">Black</label>
+                                    <label class="form-control-label" for="black">Black</label>
                                     <input class="form-control input-md"
                                         [class.error]="!TDMultiRuleNameRef.valid && TDMultiRuleNameRef.touched" ngModel
-                                        #TDMultiRuleNameRef="ngModel" required id="TDMultiRuleName"
-                                        name="TDMultiRuleName" type="text" placeholder="Black" />
+                                        #TDMultiRuleNameRef="ngModel" required id="black"
+                                        name="black" type="text" placeholder="Black" />
                                     <span *ngIf="!TDMultiRuleNameRef.valid && TDMultiRuleNameRef.touched"
                                         class="invalid-form">
                                         <small class="form-text text-danger"
@@ -257,11 +257,11 @@
                             <!-- Inspect Quantity -->
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label class="form-control-label" for="TDMultiRuleName">Inspect Quantity</label>
+                                    <label class="form-control-label" for="inspectquantity">Inspect Quantity<span style="color: red;"> * </span>:</label>
                                     <input class="form-control input-md"
                                         [class.error]="!TDMultiRuleNameRef.valid && TDMultiRuleNameRef.touched" ngModel
-                                        #TDMultiRuleNameRef="ngModel" required id="TDMultiRuleName"
-                                        name="TDMultiRuleName" type="text" placeholder="Inspect Quantity" />
+                                        #TDMultiRuleNameRef="ngModel" required id="inspectquantity"
+                                        name="inspectquantity" type="text" placeholder="Inspect Quantity" />
                                     <span *ngIf="!TDMultiRuleNameRef.valid && TDMultiRuleNameRef.touched"
                                         class="invalid-form">
                                         <small class="form-text text-danger"
@@ -272,11 +272,11 @@
                             <!-- Color -->
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label class="form-control-label" for="TDMultiRuleName">Color</label>
+                                    <label class="form-control-label" for="color">Color</label>
                                     <input class="form-control input-md"
                                         [class.error]="!TDMultiRuleNameRef.valid && TDMultiRuleNameRef.touched" ngModel
-                                        #TDMultiRuleNameRef="ngModel" required id="TDMultiRuleName"
-                                        name="TDMultiRuleName" type="text" placeholder="Color" />
+                                        #TDMultiRuleNameRef="ngModel" required id="color"
+                                        name="color" type="text" placeholder="Color" />
                                     <span *ngIf="!TDMultiRuleNameRef.valid && TDMultiRuleNameRef.touched"
                                         class="invalid-form">
                                         <small class="form-text text-danger"
@@ -290,11 +290,11 @@
                             <!-- Accepted Quantity -->
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label class="form-control-label" for="TDMultiRuleName">Accepted Quantity</label>
+                                    <label class="form-control-label" for="acceptedquantity">Accepted Quantity<span style="color: red;"> * </span>:</label>
                                     <input class="form-control input-md"
                                         [class.error]="!TDMultiRuleNameRef.valid && TDMultiRuleNameRef.touched" ngModel
-                                        #TDMultiRuleNameRef="ngModel" required id="TDMultiRuleName"
-                                        name="TDMultiRuleName" type="text" placeholder="Accepted Quantity" />
+                                        #TDMultiRuleNameRef="ngModel" required id="acceptedquantity"
+                                        name="acceptedquantity" type="text" placeholder="Accepted Quantity" />
                                     <span *ngIf="!TDMultiRuleNameRef.valid && TDMultiRuleNameRef.touched"
                                         class="invalid-form">
                                         <small class="form-text text-danger"
@@ -305,11 +305,11 @@
                             <!-- White -->
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label class="form-control-label" for="TDMultiRuleName">White</label>
+                                    <label class="form-control-label" for="white">White</label>
                                     <input class="form-control input-md"
                                         [class.error]="!TDMultiRuleNameRef.valid && TDMultiRuleNameRef.touched" ngModel
-                                        #TDMultiRuleNameRef="ngModel" required id="TDMultiRuleName"
-                                        name="TDMultiRuleName" type="text" placeholder="White" />
+                                        #TDMultiRuleNameRef="ngModel" required id="white"
+                                        name="white" type="text" placeholder="White" />
                                     <span *ngIf="!TDMultiRuleNameRef.valid && TDMultiRuleNameRef.touched"
                                         class="invalid-form">
                                         <small class="form-text text-danger"
@@ -323,11 +323,11 @@
                             <!-- Rejected Quantity -->
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label class="form-control-label" for="TDMultiRuleName">Rejected Quantity</label>
+                                    <label class="form-control-label" for="rejectedquantity">Rejected Quantity<span style="color: red;"> * </span>:</label>
                                     <input class="form-control input-md"
                                         [class.error]="!TDMultiRuleNameRef.valid && TDMultiRuleNameRef.touched" ngModel
-                                        #TDMultiRuleNameRef="ngModel" required id="TDMultiRuleName"
-                                        name="TDMultiRuleName" type="text" placeholder="Rejected Quantity" />
+                                        #TDMultiRuleNameRef="ngModel" required id="rejectedquantity"
+                                        name="rejectedquantity" type="text" placeholder="Rejected Quantity" />
                                     <span *ngIf="!TDMultiRuleNameRef.valid && TDMultiRuleNameRef.touched"
                                         class="invalid-form">
                                         <small class="form-text text-danger"
@@ -338,11 +338,11 @@
                             <!-- Measure -->
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label class="form-control-label" for="TDMultiRuleName">Measure</label>
+                                    <label class="form-control-label" for="measure">Measure</label>
                                     <input class="form-control input-md"
                                         [class.error]="!TDMultiRuleNameRef.valid && TDMultiRuleNameRef.touched" ngModel
-                                        #TDMultiRuleNameRef="ngModel" required id="TDMultiRuleName"
-                                        name="TDMultiRuleName" type="text" placeholder="Measure" />
+                                        #TDMultiRuleNameRef="ngModel" required id="measure"
+                                        name="measure" type="text" placeholder="Measure" />
                                     <span *ngIf="!TDMultiRuleNameRef.valid && TDMultiRuleNameRef.touched"
                                         class="invalid-form">
                                         <small class="form-text text-danger"
@@ -356,11 +356,11 @@
                             <!-- Pick Out -->
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label class="form-control-label" for="TDMultiRuleName">Pick Out</label>
+                                    <label class="form-control-label" for="pickout">Pick Out<span style="color: red;"> *</span></label>
                                     <input class="form-control input-md"
                                         [class.error]="!TDMultiRuleNameRef.valid && TDMultiRuleNameRef.touched" ngModel
-                                        #TDMultiRuleNameRef="ngModel" required id="TDMultiRuleName"
-                                        name="TDMultiRuleName" type="text" placeholder="Pick Out" />
+                                        #TDMultiRuleNameRef="ngModel" required id="pickout"
+                                        name="pickout" type="text" placeholder="Pick Out" />
                                     <span *ngIf="!TDMultiRuleNameRef.valid && TDMultiRuleNameRef.touched"
                                         class="invalid-form">
                                         <small class="form-text text-danger"
@@ -371,11 +371,11 @@
                             <!-- Make Error -->
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label class="form-control-label" for="TDMultiRuleName">Make Error</label>
+                                    <label class="form-control-label" for="makeerror">Make Error</label>
                                     <input class="form-control input-md"
                                         [class.error]="!TDMultiRuleNameRef.valid && TDMultiRuleNameRef.touched" ngModel
-                                        #TDMultiRuleNameRef="ngModel" required id="TDMultiRuleName"
-                                        name="TDMultiRuleName" type="text" placeholder="Make Error" />
+                                        #TDMultiRuleNameRef="ngModel" required id="makeerror"
+                                        name="makeerror" type="text" placeholder="Make Error" />
                                     <span *ngIf="!TDMultiRuleNameRef.valid && TDMultiRuleNameRef.touched"
                                         class="invalid-form">
                                         <small class="form-text text-danger"

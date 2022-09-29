@@ -109,7 +109,7 @@
                                     (search)="filterUpdate($event)" /></label>
                         </div>
                         <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pb-md-0">
-                            <a csvLink [data]="exportCSVData" class="btn btn-outline-secondary float-right"
+                            <a class="btn btn-outline-secondary float-right"
                                 rippleEffect>Preview</a>
                         </div>
                         <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pb-md-0">
@@ -124,59 +124,55 @@
                 <ngx-datatable [rows]="rows" [rowHeight]="50" class="bootstrap core-bootstrap" [limit]="selectedOption"
                     [columnMode]="ColumnMode.force" [headerHeight]="50" [footerHeight]="50" [scrollbarH]="true">
                     <!-- Date -->
-                    <ngx-datatable-column name="Date" prop="country" [width]="200"></ngx-datatable-column>
+                    <ngx-datatable-column name="Date" prop="date" [width]="100"></ngx-datatable-column>
                     <!-- Job ID -->
-                    <ngx-datatable-column name="Job ID" prop="status" [width]="200"></ngx-datatable-column>
+                    <ngx-datatable-column name="Job ID" prop="jobid" [width]="100"></ngx-datatable-column>
                     <!-- Job Name -->
-                    <ngx-datatable-column name="Job Name" prop="email" [width]="200"></ngx-datatable-column>
+                    <ngx-datatable-column name="Job Name" prop="jobname" [width]="300"></ngx-datatable-column>
                     <!-- F Number -->
-                    <ngx-datatable-column name="F Number" prop="status" [width]="200"></ngx-datatable-column>
+                    <ngx-datatable-column name="F Number" prop="fnumber" [width]="100"></ngx-datatable-column>
                     <!-- Job Quantity -->
-                    <ngx-datatable-column name="Job Quantity" prop="country" [width]="200"></ngx-datatable-column>
+                    <ngx-datatable-column name="Job Quantity" prop="jobquantity" [width]="150"></ngx-datatable-column>
                     <!-- E -->
-                    <ngx-datatable-column name="E" prop="id" [width]="200"></ngx-datatable-column>
+                    <ngx-datatable-column name="E" prop="e" [width]="100"></ngx-datatable-column>
                     <!-- Grade -->
-                    <ngx-datatable-column name="Grade" prop="id" [width]="200"></ngx-datatable-column>
+                    <ngx-datatable-column name="Grade" prop="grade" [width]="100"></ngx-datatable-column>
                     <!-- Pallet Number -->
-                    <ngx-datatable-column name="Pallet No." prop="role" [width]="200"></ngx-datatable-column>
+                    <ngx-datatable-column name="Pallet No." prop="palletnumber" [width]="100"></ngx-datatable-column>
                     <!-- Pallet Quantity -->
-                    <ngx-datatable-column name="Pallet Quantity (pcs)" prop="status" [width]="200">
+                    <ngx-datatable-column name="Pallet Quantity (pcs)" prop="palletquantity" [width]="100">
                     </ngx-datatable-column>
                     <!-- Inspect -->
-                    <ngx-datatable-column name="Inspect (pcs)" prop="role" [width]="200"></ngx-datatable-column>
+                    <ngx-datatable-column name="Inspect (pcs)" prop="inspect" [width]="100"></ngx-datatable-column>
                     <!-- Diff -->
-                    <ngx-datatable-column name="Diff" prop="email" [width]="200"></ngx-datatable-column>
+                    <ngx-datatable-column name="Diff" prop="diff" [width]="100"></ngx-datatable-column>
                     <!-- Pick Out -->
-                    <ngx-datatable-column name="Pick Out (pcs)" prop="country" [width]="200"></ngx-datatable-column>
+                    <ngx-datatable-column name="Pick Out (pcs)" prop="pickout" [width]="100"></ngx-datatable-column>
                     <!-- Accepted -->
-                    <ngx-datatable-column name="Accepted (pcs)" [sortable]="false" [width]="200">
-                        <!-- Calculation Value -->
-                        <ng-template let-row="row" ngx-datatable-cell-template>
-                                <span>{{ row.id + row.id }}</span>
-                        </ng-template>
-                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Accepted (pcs)" prop="accepted" [sortable]="false" [width]="100"></ngx-datatable-column>
                     <!-- Rejected -->
-                    <ngx-datatable-column name="Rejected (pcs)" prop="role" [width]="200"></ngx-datatable-column>
+                    <ngx-datatable-column name="Rejected (pcs)" prop="rejected" [width]="100"></ngx-datatable-column>
                     <!-- Waste Ratio -->
-                    <ngx-datatable-column name="Waste Ratio" prop="id" [width]="200"></ngx-datatable-column>
+                    <ngx-datatable-column name="Waste Ratio" prop="wasteratio" [width]="100"></ngx-datatable-column>
                     <!-- Black -->
-                    <ngx-datatable-column name="Black (pcs)" prop="country" [width]="200"></ngx-datatable-column>
+                    <ngx-datatable-column name="Black (pcs)" prop="black" [width]="100"></ngx-datatable-column>
                     <!-- Color -->
-                    <ngx-datatable-column name="Color (pcs)" prop="id" [width]="200"></ngx-datatable-column>
+                    <ngx-datatable-column name="Color (pcs)" prop="color" [width]="100"></ngx-datatable-column>
                     <!-- Measure -->
-                    <ngx-datatable-column name="Measure (pcs)" prop="role" [width]="200"></ngx-datatable-column>
+                    <ngx-datatable-column name="Measure (pcs)" prop="measure" [width]="100"></ngx-datatable-column>
                     <!-- Mark Error -->
-                    <ngx-datatable-column name="Mark Error (pcs)" prop="id" [width]="200"></ngx-datatable-column>
+                    <ngx-datatable-column name="Mark Error (pcs)" prop="markerror" [width]="100"></ngx-datatable-column>
                     <!-- White -->
-                    <ngx-datatable-column name="White (pcs)" prop="country" [width]="200"></ngx-datatable-column>
+                    <ngx-datatable-column name="White (pcs)" prop="white" [width]="100"></ngx-datatable-column>
                     <!-- Batch -->
-                    <ngx-datatable-column name="Batch" prop="email" [width]="200"></ngx-datatable-column>
+                    <ngx-datatable-column name="Batch" prop="batch" [width]="100"></ngx-datatable-column>
                     <!-- Remark -->
-                    <ngx-datatable-column name="Remark" prop="role" [width]="200"></ngx-datatable-column>
+                    <ngx-datatable-column name="Remark" prop="remark" [width]="100"></ngx-datatable-column>
                     <!-- Weekly -->
-                    <ngx-datatable-column name="Weekly" prop="id" [width]="200"></ngx-datatable-column>
+                    <ngx-datatable-column name="Weekly" prop="weakly" [width]="100"></ngx-datatable-column>
                     <!-- Checker -->
-                    <ngx-datatable-column name="Checker" prop="country" [width]="200"></ngx-datatable-column>
+                    <ngx-datatable-column name="Checker" prop="checker" [width]="100"></ngx-datatable-column>
+
 
                     <!-- Users -->
                     <!-- <ngx-datatable-column name="User" prop="fullName" [width]="200">

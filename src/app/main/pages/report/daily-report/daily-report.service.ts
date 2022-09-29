@@ -2,14 +2,16 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/router';
 
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DailyReportService implements Resolve<any>  {
+  private _jsonURL = 'assets/json/palet.json';
   public rows: any;
-  public onReportListChanged: BehaviorSubject<any>;
+  // public onReportListChanged: BehaviorSubject<any>;
+  public onReportListChanged: Subject<any>;
 
   /**
    * Constructor
@@ -18,8 +20,13 @@ export class DailyReportService implements Resolve<any>  {
    */
   constructor(private _httpClient: HttpClient) {
     // Set the defaults
-    this.onReportListChanged = new BehaviorSubject({});
-    console.log(this.onReportListChanged)
+    // this.onReportListChanged = new BehaviorSubject({});
+    this.onReportListChanged = new Subject();
+    this.getJSON().subscribe(data => {
+      this.changeData(data)
+      console.log(data);
+     });
+    // console.log(this.onReportListChanged)
   }
 
   /**
@@ -35,6 +42,14 @@ export class DailyReportService implements Resolve<any>  {
         resolve();
       }, reject);
     });
+  }
+
+  public getJSON(): Observable<any> {
+    return this._httpClient.get(this._jsonURL);
+  }
+
+  public changeData(data) {
+    this.onReportListChanged.next(data);
   }
 
   /**
