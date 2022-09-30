@@ -103,6 +103,32 @@
                 "remark": "Case4",
                 "weakly": 9,
                 "checker": "นายC"
+            },
+            {
+                "date": "25-Feb-2022",
+                "jobid": "J52200002",
+                "jobname": "OMEPRAZOLE 20 MG 10x10'S (SMALL)",
+                "fnumber": "F010002",
+                "jobquantity": 1000000,
+                "e": 3.00,
+                "grade": "C",
+                "palletnumber": "Reject Pallet",
+                "palletquantity": 0,
+                "inspect": 2100,
+                "diff": 0,
+                "pickout": 0,
+                "accepted": 560,
+                "rejected": 1540,
+                "wasteratio": "73%",
+                "black": 543,
+                "color": 438,
+                "measure": 0,
+                "markerror": 2,
+                "white": 557,
+                "batch": "Run-001",
+                "remark": "Case4",
+                "weakly": 9,
+                "checker": "นายC"
             }
         ]
     

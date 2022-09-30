@@ -27,34 +27,41 @@ export class DailyReportComponent implements OnInit {
   public previousStatusFilter = '';
   public exportCSVData;
 
-  public selectRole: any = [
+  public selectFNumber: any = [
     { name: 'All', value: '' },
-    { name: 'Admin', value: 'Admin' },
-    { name: 'Author', value: 'Author' },
-    { name: 'Editor', value: 'Editor' },
-    { name: 'Maintainer', value: 'Maintainer' },
-    { name: 'Subscriber', value: 'Subscriber' }
+    { name: 'F010001', value: 'F010001' },
+    { name: 'F010002', value: 'F010002' },
+    { name: 'F010003', value: 'F010003' },
+    { name: 'F010004', value: 'F010004' },
+    { name: 'F010005', value: 'F010005' }
   ];
 
-  public selectPlan: any = [
+  public selectGrade: any = [
     { name: 'All', value: '' },
-    { name: 'Basic', value: 'Basic' },
-    { name: 'Company', value: 'Company' },
-    { name: 'Enterprise', value: 'Enterprise' },
-    { name: 'Team', value: 'Team' }
+    { name: 'A', value: 'A' },
+    { name: 'B', value: 'B' },
+    { name: 'C', value: 'C' },
+    { name: 'D', value: 'D' },
+    { name: 'E', value: 'E' },
+    { name: 'F', value: 'F' },
+    { name: 'G', value: 'G' }
+
   ];
 
-  public selectStatus: any = [
+  public selectChecker: any = [
     { name: 'All', value: '' },
-    { name: 'Pending', value: 'Pending' },
-    { name: 'Active', value: 'Active' },
-    { name: 'Inactive', value: 'Inactive' }
+    { name: 'นายA', value: 'นายA' },
+    { name: 'นายB', value: 'นายB' },
+    { name: 'นายC', value: 'นายC' }
   ];
 
-  public selectedRole = [];
-  public selectedPlan = [];
-  public selectedStatus = [];
+  public selectedFnumber = [];
+  public selectedGrade = [];
+  public selectedChecker = [];
   public searchValue = '';
+  public searchFromDate = '';
+  public searchEndDate = '';
+  public searchJobNumber = '';
 
   // Decorator
   @ViewChild(DatatableComponent) table: DatatableComponent;
@@ -88,18 +95,18 @@ export class DailyReportComponent implements OnInit {
    */
   filterUpdate(event) {
     // Reset ng-select on search
-    this.selectedRole = this.selectRole[0];
-    this.selectedPlan = this.selectPlan[0];
-    this.selectedStatus = this.selectStatus[0];
+    this.selectedFnumber = this.selectFNumber[0];
+    this.selectedGrade = this.selectGrade[0];
+    this.selectedChecker = this.selectChecker[0];
 
     const val = event.target.value.toLowerCase();
 
     // Filter Our Data
     const temp = this.tempData.filter(function (d) {
-      return (d.fullName.toLowerCase().indexOf(val) !== -1 || !val) || 
-      (d.email.toLowerCase().indexOf(val) !== -1 || !val) ||
-      (d.country.toLowerCase().indexOf(val) !== -1 || !val) ||
-      (d.status.toLowerCase().indexOf(val) !== -1 || !val);
+      return (d.jobname.toLowerCase().indexOf(val) !== -1 || !val) ||
+      (d.batch.toLowerCase().indexOf(val) !== -1 || !val) ||
+      (d.palletnumber.toLowerCase().indexOf(val) !== -1 || !val) ||
+      (d.remark.toLowerCase().indexOf(val) !== -1 || !val);
     });
 
     // Update The Rows
@@ -109,23 +116,48 @@ export class DailyReportComponent implements OnInit {
   }
 
   /**
-   * Filter By Roles
+   * filterUpdate
    *
    * @param event
    */
-  filterByRole(event) {
+   filterJobNumber(event) {
+    // Reset ng-select on search
+    this.selectedFnumber = this.selectFNumber[0];
+    this.selectedGrade = this.selectGrade[0];
+    this.selectedChecker = this.selectChecker[0];
+
+    const val = event.target.value.toLowerCase();
+
+    // Filter Our Data
+    const temp = this.tempData.filter(function (d) {
+      return (d.jobid.toLowerCase().indexOf(val) !== -1 || !val);
+    });
+
+    // Update The Rows
+    this.rows = temp;
+    // Whenever The Filter Changes, Always Go Back To The First Page
+    this.table.offset = 0;
+  }
+
+  /**
+   * Filter By F Number
+   *
+   * @param event
+   */
+  filterByFnumber(event) {
     const filter = event ? event.value : '';
     this.previousRoleFilter = filter;
     this.temp = this.filterRows(filter, this.previousPlanFilter, this.previousStatusFilter);
     this.rows = this.temp;
+    console.log(event)
   }
 
   /**
-   * Filter By Plan
+   * Filter By Grade
    *
    * @param event
    */
-  filterByPlan(event) {
+  filterByGrade(event) {
     const filter = event ? event.value : '';
     this.previousPlanFilter = filter;
     this.temp = this.filterRows(this.previousRoleFilter, filter, this.previousStatusFilter);
@@ -133,11 +165,11 @@ export class DailyReportComponent implements OnInit {
   }
 
   /**
-   * Filter By Status
+   * Filter By Checker
    *
    * @param event
    */
-  filterByStatus(event) {
+   filterByChecker(event) {
     const filter = event ? event.value : '';
     this.previousStatusFilter = filter;
     this.temp = this.filterRows(this.previousRoleFilter, this.previousPlanFilter, filter);
@@ -147,23 +179,26 @@ export class DailyReportComponent implements OnInit {
   /**
    * Filter Rows
    *
-   * @param roleFilter
-   * @param planFilter
-   * @param statusFilter
+   * @param fNumberFilter
+   * @param gradeFilter
+   * @param checkerFilter
    */
-  filterRows(roleFilter, planFilter, statusFilter): any[] {
+  filterRows(fNumberFilter, gradeFilter, checkerFilter): any[] {
     // Reset search on select change
     this.searchValue = '';
+    this.searchFromDate = '';
+    this.searchEndDate = '';
+    this.searchJobNumber = '';
 
-    roleFilter = roleFilter.toLowerCase();
-    planFilter = planFilter.toLowerCase();
-    statusFilter = statusFilter.toLowerCase();
+    fNumberFilter = fNumberFilter.toLowerCase();
+    gradeFilter = gradeFilter.toLowerCase();
+    checkerFilter = checkerFilter.toLowerCase();
 
     return this.tempData.filter(row => {
-      const isPartialNameMatch = row.role.toLowerCase().indexOf(roleFilter) !== -1 || !roleFilter;
-      const isPartialGenderMatch = row.currentPlan.toLowerCase().indexOf(planFilter) !== -1 || !planFilter;
-      const isPartialStatusMatch = row.status.toLowerCase().indexOf(statusFilter) !== -1 || !statusFilter;
-      return isPartialNameMatch && isPartialGenderMatch && isPartialStatusMatch;
+      const isPartialFumberMatch = row.fnumber.toLowerCase().indexOf(fNumberFilter) !== -1 || !fNumberFilter;
+      const isPartialGradeMatch = row.grade.toLowerCase().indexOf(gradeFilter) !== -1 || !gradeFilter;
+      const isPartialCheckerMatch = row.checker.toLowerCase().indexOf(checkerFilter) !== -1 || !checkerFilter;
+      return isPartialFumberMatch && isPartialGradeMatch && isPartialCheckerMatch;
     });
   }
 
@@ -191,7 +226,6 @@ export class DailyReportComponent implements OnInit {
           this.exportCSVData = this.rows;
         });
       }
-      console.log(this.tempData)
     });
   }
 

@@ -14,18 +14,16 @@
                                 <div class="col-md-6 col-12 ">
                                     <div class="align-items-center pb-1">
                                         <label class="d-flex align-items-center">From Date:</label>
-                                        <input [(ngModel)]="searchValue" name="searchValue" type="search"
-                                            class="form-control" (keyup)="filterUpdate($event)"
-                                            (search)="filterUpdate($event)" />
+                                        <input [(ngModel)]="searchFromDate" name="searchFromDate" type="search"
+                                            class="form-control"/>
                                     </div>
                                 </div>
                                 <!-- End Date -->
                                 <div class="col-md-6 col-12">
                                     <div class="align-items-center pb-1">
                                         <label class="d-flex align-items-center">End Date:</label>
-                                        <input [(ngModel)]="searchValue" name="searchValue" type="search"
-                                            class="form-control" (keyup)="filterUpdate($event)"
-                                            (search)="filterUpdate($event)" />
+                                        <input [(ngModel)]="searchEndDate" name="searchEndDate" type="search"
+                                            class="form-control"/>
                                     </div>
                                 </div>
                             </div>
@@ -35,18 +33,16 @@
                                 <div class="col-md-6 col-12 ">
                                     <div class="align-items-center pb-1">
                                         <label class="d-flex align-items-center">Job Number:</label>
-                                        <input [(ngModel)]="searchValue" name="searchValue" type="search"
-                                            class="form-control" (keyup)="filterUpdate($event)"
-                                            (search)="filterUpdate($event)" />
+                                        <input [(ngModel)]="searchJobNumber" name="searchJobNumber" type="search"
+                                            class="form-control" (keyup)="filterJobNumber($event)"
+                                            (search)="filterJobNumber($event)" />
                                     </div>
                                 </div>
                                 <!-- Disable -->
                                 <div class="col-md-6 col-12">
                                     <div class="align-items-center pb-1">
                                         <label class="d-flex align-items-center" hidden>Job Number:</label>
-                                        <input [(ngModel)]="searchValue" name="jobnumber-second" type="search"
-                                            class="form-control" (keyup)="filterUpdate($event)"
-                                            (search)="filterUpdate($event)" disabled />
+                                        <input type="search" class="form-control" disabled />
                                     </div>
                                 </div>
                             </div>
@@ -56,9 +52,9 @@
                                 <div class="col-12 col-md-4">
                                     <fieldset class="form-group">
                                         <label class="d-flex align-items-center" hidden>F Number:</label>
-                                        <ng-select [items]="selectRole" [(ngModel)]="selectedRole" name="selectedRole"
+                                        <ng-select [items]="selectFNumber" [(ngModel)]="selectedFnumber" name="selectedFnumber"
                                             bindLabel="name" placeholder="Select F Number"
-                                            (change)="filterByRole($event)">
+                                            (change)="filterByFnumber($event)">
                                         </ng-select>
                                     </fieldset>
                                 </div>
@@ -66,8 +62,8 @@
                                 <div class="col-12 col-md-4">
                                     <fieldset class="form-group">
                                         <label class="d-flex align-items-center" hidden>Grade:</label>
-                                        <ng-select [items]="selectPlan" [(ngModel)]="selectedPlan" name="selectedPlan"
-                                            bindLabel="name" placeholder="Select Grade" (change)="filterByPlan($event)">
+                                        <ng-select [items]="selectGrade" [(ngModel)]="selectedGrade" name="selectedGrade"
+                                            bindLabel="name" placeholder="Select Grade" (change)="filterByGrade($event)">
                                         </ng-select>
                                     </fieldset>
                                 </div>
@@ -75,9 +71,9 @@
                                 <div class="col-12 col-md-4">
                                     <fieldset class="form-group">
                                         <label class="d-flex align-items-center" hidden>Checker:</label>
-                                        <ng-select [items]="selectStatus" [(ngModel)]="selectedStatus"
-                                            name="selectedStatus" bindLabel="name" placeholder="Select Checker"
-                                            (change)="filterByStatus($event)"></ng-select>
+                                        <ng-select [items]="selectChecker" [(ngModel)]="selectedChecker"
+                                            name="selectedChecker" bindLabel="name" placeholder="Select Checker"
+                                            (change)="filterByChecker($event)"></ng-select>
                                     </fieldset>
                                 </div>
                             </div>
@@ -138,20 +134,20 @@
                     <!-- Grade -->
                     <ngx-datatable-column name="Grade" prop="grade" [width]="100"></ngx-datatable-column>
                     <!-- Pallet Number -->
-                    <ngx-datatable-column name="Pallet No." prop="palletnumber" [width]="100"></ngx-datatable-column>
+                    <ngx-datatable-column name="Pallet No." prop="palletnumber" [width]="150"></ngx-datatable-column>
                     <!-- Pallet Quantity -->
-                    <ngx-datatable-column name="Pallet Quantity (pcs)" prop="palletquantity" [width]="100">
+                    <ngx-datatable-column name="Pallet Quantity (pcs)" prop="palletquantity" [width]="200">
                     </ngx-datatable-column>
                     <!-- Inspect -->
-                    <ngx-datatable-column name="Inspect (pcs)" prop="inspect" [width]="100"></ngx-datatable-column>
+                    <ngx-datatable-column name="Inspect (pcs)" prop="inspect" [width]="150"></ngx-datatable-column>
                     <!-- Diff -->
                     <ngx-datatable-column name="Diff" prop="diff" [width]="100"></ngx-datatable-column>
                     <!-- Pick Out -->
-                    <ngx-datatable-column name="Pick Out (pcs)" prop="pickout" [width]="100"></ngx-datatable-column>
+                    <ngx-datatable-column name="Pick Out (pcs)" prop="pickout" [width]="200"></ngx-datatable-column>
                     <!-- Accepted -->
-                    <ngx-datatable-column name="Accepted (pcs)" prop="accepted" [sortable]="false" [width]="100"></ngx-datatable-column>
+                    <ngx-datatable-column name="Accepted (pcs)" prop="accepted" [sortable]="false" [width]="200"></ngx-datatable-column>
                     <!-- Rejected -->
-                    <ngx-datatable-column name="Rejected (pcs)" prop="rejected" [width]="100"></ngx-datatable-column>
+                    <ngx-datatable-column name="Rejected (pcs)" prop="rejected" [width]="200"></ngx-datatable-column>
                     <!-- Waste Ratio -->
                     <ngx-datatable-column name="Waste Ratio" prop="wasteratio" [width]="100"></ngx-datatable-column>
                     <!-- Black -->
@@ -159,9 +155,9 @@
                     <!-- Color -->
                     <ngx-datatable-column name="Color (pcs)" prop="color" [width]="100"></ngx-datatable-column>
                     <!-- Measure -->
-                    <ngx-datatable-column name="Measure (pcs)" prop="measure" [width]="100"></ngx-datatable-column>
+                    <ngx-datatable-column name="Measure (pcs)" prop="measure" [width]="200"></ngx-datatable-column>
                     <!-- Mark Error -->
-                    <ngx-datatable-column name="Mark Error (pcs)" prop="markerror" [width]="100"></ngx-datatable-column>
+                    <ngx-datatable-column name="Mark Error (pcs)" prop="markerror" [width]="200"></ngx-datatable-column>
                     <!-- White -->
                     <ngx-datatable-column name="White (pcs)" prop="white" [width]="100"></ngx-datatable-column>
                     <!-- Batch -->
