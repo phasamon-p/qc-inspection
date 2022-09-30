@@ -1,11 +1,28 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AuthGuard } from 'app/auth/helpers';
-import { CoreCommonModule } from '@core/common.module';
+import { CsvModule } from '@ctrl/ngx-csv';
+
 import { ContentHeaderModule } from 'app/layout/components/content-header/content-header.module';
-import { JobSummaryGraphComponent } from './job-summary-graph/job-summary-graph.component';
+
+import { FormsModule } from '@angular/forms';
+import { RouterModule, Routes } from '@angular/router';
+
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+import { Ng2FlatpickrModule } from 'ng2-flatpickr';
+
+import { CoreCommonModule } from '@core/common.module';
+import { CoreDirectivesModule } from '@core/directives/directives';
+import { CorePipesModule } from '@core/pipes/pipes.module';
+import { CoreSidebarModule } from '@core/components';
+
+import { InvoiceListService } from 'app/main/apps/invoice/invoice-list/invoice-list.service';
+import { InvoiceModule } from 'app/main/apps/invoice/invoice.module';
+
+import { JobSummaryGraphComponent } from 'app/main/pages/graph/job-summary-graph/job-summary-graph.component';
+import { JobSummaryGraphService } from 'app/main/pages/graph/job-summary-graph/job-summary-graph.service';
 
 const routes: Routes = [
   {
@@ -13,9 +30,9 @@ const routes: Routes = [
     component: JobSummaryGraphComponent,
     canActivate: [AuthGuard],
     resolve: {
-      // profile: ProfileService
+      uls: JobSummaryGraphService
     },
-    // data: { animation: 'list' }
+    data: { animation: 'JobSummaryGraphComponent' }
   },
 ];
 
@@ -29,7 +46,17 @@ const routes: Routes = [
     RouterModule.forChild(routes), 
     NgbModule, 
     CoreCommonModule, 
-    ContentHeaderModule
+    ContentHeaderModule,
+    FormsModule,
+    NgbModule,
+    NgSelectModule,
+    Ng2FlatpickrModule,
+    NgxDatatableModule,
+    CorePipesModule,
+    CoreDirectivesModule,
+    InvoiceModule,
+    CoreSidebarModule,
+    CsvModule
   ],
    // providers: [ProfileService]
 })

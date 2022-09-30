@@ -1,1 +1,70 @@
-<p>job-summary-graph works!</p>
+<div class="content-wrapper container-xxl p-0">
+    <div class="content-body">
+        <!-- Data List -->
+        <section class="users-list-wrapper">
+            <!-- data filter start -->
+            <div class="card">
+                <h5 class="card-header">Search Filter</h5>
+                <div class="card-body">
+                    <div class="users-list-filter">
+                        <form>
+                            <!-- Row1 -->
+                            <div class="row">
+                                <!-- From Date -->
+                                <div class="col-md-6 col-12 ">
+                                    <div class="align-items-center pb-1">
+                                        <label class="d-flex align-items-center">From Date:</label>
+                                        <input [(ngModel)]="searchFromDate" name="searchFromDate" type="search"
+                                            class="form-control"/>
+                                    </div>
+                                </div>
+                                <!-- End Date -->
+                                <div class="col-md-6 col-12">
+                                    <div class="align-items-center pb-1">
+                                        <label class="d-flex align-items-center">End Date:</label>
+                                        <input [(ngModel)]="searchEndDate" name="searchEndDate" type="search"
+                                            class="form-control"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Row2 -->
+                            <div class="row">
+                                <!-- Job Number -->
+                                <div class="col-md-6 col-12 ">
+                                    <div class="align-items-center pb-1">
+                                        <label class="d-flex align-items-center">Job Number:</label>
+                                        <input [(ngModel)]="searchJobNumber" name="searchJobNumber" type="search"
+                                            class="form-control" (keyup)="filterJobNumber($event)"
+                                            (search)="filterJobNumber($event)" disabled/>
+                                    </div>
+                                </div>
+                                <!-- Disable -->
+                                <div class="col-md-6 col-12">
+                                    <div class="align-items-center pb-1">
+                                        <label class="d-flex align-items-center" hidden>Job Number:</label>
+                                        <input type="search" class="form-control" disabled />
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- data filter end -->
+            <div class="card">
+                <h5 class="card-header">Graph</h5>
+                <div class="card-body">
+                    <p>Developing a graph!</p>
+                </div>
+            </div>
+            
+        </section>
+        <!--/ User List -->
+    </div>
+
+    <!-- New User Sidebar -->
+    <core-sidebar class="modal modal-slide-in sidebar-todo-modal fade" name="new-user-sidebar"
+        overlayClass="modal-backdrop">
+    </core-sidebar>
+    <!--/ New User Sidebar -->
+</div>

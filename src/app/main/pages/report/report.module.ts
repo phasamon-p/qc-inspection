@@ -25,8 +25,11 @@ import { InvoiceModule } from 'app/main/apps/invoice/invoice.module';
 import { DailyReportComponent } from 'app/main/pages/report/daily-report/daily-report.component';
 import { DailyReportService } from 'app/main/pages/report/daily-report/daily-report.service';
 
-import { JobSummaryReportComponent } from './job-summary-report/job-summary-report.component';
-import { ReportFromMachineComponent } from './report-from-machine/report-from-machine.component';
+import { JobSummaryReportComponent } from 'app/main/pages/report/job-summary-report/job-summary-report.component';
+import { JobSummaryReportService } from 'app/main/pages/report/job-summary-report/job-summary-report.service';
+
+import { ReportFromMachineComponent } from 'app/main/pages/report/report-from-machine/report-from-machine.component';
+import { ReportFromMachineService } from 'app/main/pages/report/report-from-machine/report-from-machine.service';
 
 const routes: Routes = [
   {
@@ -43,18 +46,18 @@ const routes: Routes = [
     component: JobSummaryReportComponent,
     canActivate: [AuthGuard],
     resolve: {
-      // kbq: BlogListService
+      uls: JobSummaryReportService
     },
-    // data: { animation: 'list' }
+    data: { animation: 'JobSummaryReportComponent' }
   },
   {
     path: 'report-machine',
     component: ReportFromMachineComponent,
     canActivate: [AuthGuard],
     resolve: {
-      // kbq: BlogListService
+      uls: ReportFromMachineService
     },
-    // data: { animation: 'list' }
+    data: { animation: 'ReportFromMachineComponent' }
   },
 ];
 

@@ -119,10 +119,25 @@
                 </div>
                 <ngx-datatable [rows]="rows" [rowHeight]="50" class="bootstrap core-bootstrap" [limit]="selectedOption"
                     [columnMode]="ColumnMode.force" [headerHeight]="50" [footerHeight]="50" [scrollbarH]="true">
+                    <!-- action -->
+                    <ngx-datatable-column name="Actions" [width]="40" [sortable]="false">
+                        <ng-template ngx-datatable-cell-template let-row="row">
+                          <div ngbDropdown container="body">
+                            <button ngbDropdownToggle type="button" class="btn icon-btn btn-sm hide-arrow" rippleEffect>
+                              <span [data-feather]="'more-vertical'" [class]="'cursor-pointer'"></span>
+                            </button>
+                            <div ngbDropdownMenu>
+                                <!-- routerLink="/apps/user/user-edit/{{ row.id }}" -->
+                              <a  ngbDropdownItem><span [data-feather]="'edit'" [size]="16" [class]="'mr-50'"></span> Edit</a>
+                              <a href="javascript:;" ngbDropdownItem><span [data-feather]="'trash'" [size]="16" [class]="'mr-50'"></span> Delete</a>
+                            </div>
+                          </div>
+                        </ng-template>
+                      </ngx-datatable-column>
                     <!-- Date -->
-                    <ngx-datatable-column name="Date" prop="date" [width]="100"></ngx-datatable-column>
+                    <ngx-datatable-column name="Date" prop="date" [width]="150"></ngx-datatable-column>
                     <!-- Job ID -->
-                    <ngx-datatable-column name="Job ID" prop="jobid" [width]="100"></ngx-datatable-column>
+                    <ngx-datatable-column name="Job ID" prop="jobid" [width]="150"></ngx-datatable-column>
                     <!-- Job Name -->
                     <ngx-datatable-column name="Job Name" prop="jobname" [width]="300"></ngx-datatable-column>
                     <!-- F Number -->
@@ -145,21 +160,21 @@
                     <!-- Pick Out -->
                     <ngx-datatable-column name="Pick Out (pcs)" prop="pickout" [width]="200"></ngx-datatable-column>
                     <!-- Accepted -->
-                    <ngx-datatable-column name="Accepted (pcs)" prop="accepted" [sortable]="false" [width]="200"></ngx-datatable-column>
+                    <ngx-datatable-column name="Accepted (pcs)" prop="accepted" [width]="200"></ngx-datatable-column>
                     <!-- Rejected -->
                     <ngx-datatable-column name="Rejected (pcs)" prop="rejected" [width]="200"></ngx-datatable-column>
                     <!-- Waste Ratio -->
-                    <ngx-datatable-column name="Waste Ratio" prop="wasteratio" [width]="100"></ngx-datatable-column>
+                    <ngx-datatable-column name="Waste Ratio" prop="wasteratio" [width]="150"></ngx-datatable-column>
                     <!-- Black -->
-                    <ngx-datatable-column name="Black (pcs)" prop="black" [width]="100"></ngx-datatable-column>
+                    <ngx-datatable-column name="Black (pcs)" prop="black" [width]="150"></ngx-datatable-column>
                     <!-- Color -->
-                    <ngx-datatable-column name="Color (pcs)" prop="color" [width]="100"></ngx-datatable-column>
+                    <ngx-datatable-column name="Color (pcs)" prop="color" [width]="150"></ngx-datatable-column>
                     <!-- Measure -->
                     <ngx-datatable-column name="Measure (pcs)" prop="measure" [width]="200"></ngx-datatable-column>
                     <!-- Mark Error -->
                     <ngx-datatable-column name="Mark Error (pcs)" prop="markerror" [width]="200"></ngx-datatable-column>
                     <!-- White -->
-                    <ngx-datatable-column name="White (pcs)" prop="white" [width]="100"></ngx-datatable-column>
+                    <ngx-datatable-column name="White (pcs)" prop="white" [width]="150"></ngx-datatable-column>
                     <!-- Batch -->
                     <ngx-datatable-column name="Batch" prop="batch" [width]="100"></ngx-datatable-column>
                     <!-- Remark -->

@@ -8,9 +8,8 @@ import { BehaviorSubject, Observable, Subject } from 'rxjs';
   providedIn: 'root'
 })
 export class DailyReportService implements Resolve<any>  {
-  private _jsonURL = 'assets/json/palet.json';
+  private _jsonURL = 'assets/json/daily-report.json';
   public rows: any;
-  // public onReportListChanged: BehaviorSubject<any>;
   public onReportListChanged: Subject<any>;
 
   /**
@@ -22,11 +21,6 @@ export class DailyReportService implements Resolve<any>  {
     // Set the defaults
     // this.onReportListChanged = new BehaviorSubject({});
     this.onReportListChanged = new Subject();
-    this.getJSON().subscribe(data => {
-      this.changeData(data)
-      console.log(data);
-     });
-    // console.log(this.onReportListChanged)
   }
 
   /**
@@ -36,32 +30,34 @@ export class DailyReportService implements Resolve<any>  {
    * @param {RouterStateSnapshot} state
    * @returns {Observable<any> | Promise<any> | any}
    */
+
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any> | Promise<any> | any {
-    return new Promise<void>((resolve, reject) => {
-      Promise.all([this.getDataTableRows()]).then(() => {
-        resolve();
-      }, reject);
-    });
+    return this._httpClient.get(this._jsonURL).subscribe(data => {
+      this.onReportListChanged.next(data);
+     });
   }
 
-  public getJSON(): Observable<any> {
-    return this._httpClient.get(this._jsonURL);
-  }
+  // public getJSON() {
+  //   return this._httpClient.get(this._jsonURL).subscribe(data => {
+  //     this.changeData(data)
+  //     console.log(data);
+  //    });
+  // }
 
-  public changeData(data) {
-    this.onReportListChanged.next(data);
-  }
+  // public changeData(data) {
+  //   this.onReportListChanged.next(data);
+  // }
 
   /**
    * Get rows
    */
-  getDataTableRows(): Promise<any[]> {
-    return new Promise((resolve, reject) => {
-      this._httpClient.get('api/users-data').subscribe((response: any) => {
-        this.rows = response;
-        this.onReportListChanged.next(this.rows);
-        resolve(this.rows);
-      }, reject);
-    });
-  }
+  // getDataTableRows(): Promise<any[]> {
+  //   return new Promise((resolve, reject) => {
+  //     this._httpClient.get('api/users-data').subscribe((response: any) => {
+  //       this.rows = response;
+  //       this.onReportListChanged.next(this.rows);
+  //       resolve(this.rows);
+  //     }, reject);
+  //   });
+  // }
 }
