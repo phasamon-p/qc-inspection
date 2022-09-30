@@ -41,25 +41,6 @@ export class ReportFromMachineComponent implements OnInit {
     { name: 'Run-010', value: 'Run-0010' }
   ];
 
-  public selectGrade: any = [
-    { name: 'All', value: '' },
-    { name: 'A', value: 'A' },
-    { name: 'B', value: 'B' },
-    { name: 'C', value: 'C' },
-    { name: 'D', value: 'D' },
-    { name: 'E', value: 'E' },
-    { name: 'F', value: 'F' },
-    { name: 'G', value: 'G' }
-
-  ];
-
-  public selectChecker: any = [
-    { name: 'All', value: '' },
-    { name: 'นายA', value: 'นายA' },
-    { name: 'นายB', value: 'นายB' },
-    { name: 'นายC', value: 'นายC' }
-  ];
-
   public selectedBatch = [];
   public searchValue = '';
   public searchFromDate = '';
@@ -105,8 +86,7 @@ export class ReportFromMachineComponent implements OnInit {
     // Filter Our Data
     const temp = this.tempData.filter(function (d) {
       return (d.jobname.toLowerCase().indexOf(val) !== -1 || !val) ||
-        (d.batch.toLowerCase().indexOf(val) !== -1 || !val) ||
-        (d.palletnumber.toLowerCase().indexOf(val) !== -1 || !val);
+        (d.date.toLowerCase().indexOf(val) !== -1 || !val);
     });
 
     // Update The Rows
