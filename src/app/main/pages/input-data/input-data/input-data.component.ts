@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 
 import * as snippet from 'app/main/forms/form-validation/form-validation.snippetcode';
 import { MustMatch } from './_helpers/must-match.validator';
 
+import { PalletService } from 'app/auth/service';
 
 @Component({
   selector: 'app-input-data',
@@ -26,6 +27,15 @@ export class InputDataComponent implements OnInit {
   public ReactiveUDFormSubmitted = false;
 
   public currentRow;
+  public palletCode: Array<any>;
+  public selectedPalletCode;
+
+  public cars = [
+    { id: 1, name: 'Volvo' },
+    { id: 2, name: 'Saab' },
+    { id: 3, name: 'Opel' },
+    { id: 4, name: 'Audi' },
+];
 
   // Reactive User Details form data
   public UDForm = {
@@ -38,8 +48,13 @@ export class InputDataComponent implements OnInit {
     age: '',
     phoneNumber: ''
   };
+   /**
+   *
+   * @param {HttpClient} _http
+   * @param {PalletService} _palletService
+   */
 
-  constructor(private formBuilder: UntypedFormBuilder) {}
+  constructor(private formBuilder: UntypedFormBuilder, private _palletService: PalletService) {}
 
   // getter for easy access to form fields
   get ReactiveUDForm() {
@@ -64,6 +79,12 @@ export class InputDataComponent implements OnInit {
    * On init
    */
   ngOnInit() {
+    this._palletService.getPalletCode()
+    .pipe()
+    .subscribe(palletcode => {
+      this.palletCode = palletcode.data;
+      console.log(this.palletCode);
+    });
     // content header
     this.contentHeader = {
       headerTitle: 'Form Validation',

@@ -22,7 +22,7 @@
                                 <!-- Disable -->
                                 <div class="col-md-6 col-12">
                                     <div class="align-items-center pb-1">
-                                        <label class="d-flex align-items-center" hidden>Job Number:</label>
+                                        <label class="d-flex align-items-center" hidden>Job Name:</label>
                                         <input type="search" class="form-control" disabled />
                                     </div>
                                 </div>
@@ -30,7 +30,7 @@
                             <!-- Row2 -->
                             <div class="row">
                                 <!-- F Number -->
-                                <div class="col-12 col-md-4">
+                                <div class="col-12 col-md-6">
                                     <fieldset class="form-group">
                                         <label class="d-flex align-items-center" hidden>F Number:</label>
                                         <ng-select [items]="selectFNumber" [(ngModel)]="selectedFnumber" name="selectedFnumber"
@@ -40,7 +40,7 @@
                                     </fieldset>
                                 </div>
                                 <!-- Grade -->
-                                <div class="col-12 col-md-4">
+                                <div class="col-12 col-md-6">
                                     <fieldset class="form-group">
                                         <label class="d-flex align-items-center" hidden>Grade:</label>
                                         <ng-select [items]="selectGrade" [(ngModel)]="selectedGrade" name="selectedGrade"
@@ -49,14 +49,14 @@
                                     </fieldset>
                                 </div>
                                 <!-- Checker -->
-                                <div class="col-12 col-md-4">
+                                <!-- <div class="col-12 col-md-4">
                                     <fieldset class="form-group">
                                         <label class="d-flex align-items-center" hidden>Checker:</label>
                                         <ng-select [items]="selectChecker" [(ngModel)]="selectedChecker"
                                             name="selectedChecker" bindLabel="name" placeholder="Select Checker"
                                             (change)="filterByChecker($event)"></ng-select>
                                     </fieldset>
-                                </div>
+                                </div> -->
                             </div>
                         </form>
                     </div>

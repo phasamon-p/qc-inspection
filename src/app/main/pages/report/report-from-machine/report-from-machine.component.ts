@@ -168,6 +168,7 @@ export class ReportFromMachineComponent implements OnInit {
             this.rows = response;
             this.tempData = this.rows;
             this.exportCSVData = this.rows;
+            console.log(response);
           });
         }, 450);
       } else {
@@ -175,6 +176,7 @@ export class ReportFromMachineComponent implements OnInit {
           this.rows = response;
           this.tempData = this.rows;
           this.exportCSVData = this.rows;
+          console.log(response);
         });
       }
     });

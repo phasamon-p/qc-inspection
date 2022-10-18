@@ -9,7 +9,9 @@ import { BehaviorSubject, Observable, Subject } from 'rxjs';
 })
 export class DailyReportService implements Resolve<any>  {
   private _jsonURL = 'assets/json/daily-report.json';
+  private _apiURL = 'http://192.168.5.13:23456';
   public rows: any;
+  public data: any;
   public onReportListChanged: Subject<any>;
 
   /**
@@ -34,12 +36,12 @@ export class DailyReportService implements Resolve<any>  {
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any> | Promise<any> | any {
     return this._httpClient.get(this._jsonURL).subscribe(data => {
       this.onReportListChanged.next(data);
+      
      });
   }
 
   // public getJSON() {
-  //   return this._httpClient.get(this._jsonURL).subscribe(data => {
-  //     this.changeData(data)
+  //   return this._httpClient.get(this._apiURL+ '/WeatherForecast').subscribe(data => {
   //     console.log(data);
   //    });
   // }

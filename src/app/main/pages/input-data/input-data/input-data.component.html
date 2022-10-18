@@ -28,12 +28,18 @@
                             <div class="col-sm-12">
                                 <div class="form-group">
                                     <label for="pallernumber">Pallet Number<span style="color: red;"> * </span>:</label>
-                                    <select class="form-control" name="pallernumber"
+                                    <ng-select [(ngModel)]="selectedPalletCode" class="form-control">
+                                        
+                                            <ng-option *ngFor="let car of cars" [value]="car.id">{{car.name}}</ng-option>
+                                 
+                                        
+                                     </ng-select>
+                                    <!-- <select class="form-control" name="pallernumber"
                                         id="pallernumber">
                                         <option>active</option>
                                         <option>inactive</option>
                                         <option>pending</option>
-                                    </select>
+                                    </select> -->
                                 </div>
                             </div>
                         </div>
