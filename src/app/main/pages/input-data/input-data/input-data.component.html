@@ -11,11 +11,15 @@
                                 <div class="form-group">
                                     <label for="UDRejectPallet" class="d-block mb-1">Reject Pallet</label>
                                     <div class="custom-control custom-radio custom-control-inline">
-                                        <input type="radio" id="yes" value="true" name="rejectpallet" class="custom-control-input" (change)="changeRejectPallet($event)" formControlName="rejectpallet"/>
+                                        <input type="radio" id="yes" value="true" name="rejectpallet"
+                                            class="custom-control-input" (change)="changeRejectPallet($event)"
+                                            formControlName="rejectpallet" />
                                         <label class="custom-control-label" for="yes">Yes</label>
                                     </div>
                                     <div class="custom-control custom-radio custom-control-inline">
-                                        <input type="radio" id="no" value="false" name="rejectpallet" class="custom-control-input" (change)="changeRejectPallet($event)" formControlName="rejectpallet"/>
+                                        <input type="radio" id="no" value="false" name="rejectpallet"
+                                            class="custom-control-input" (change)="changeRejectPallet($event)"
+                                            formControlName="rejectpallet" />
                                         <label class="custom-control-label" for="no">No</label>
                                     </div>
                                 </div>
@@ -41,7 +45,7 @@
                                     <label for="UDPalletQuantity">Pallet Quantity</label>
                                     <input type="number" id="UDPalletQuantity" formControlName="palletquantity"
                                         class="form-control"
-                                        [ngClass]="{ 'is-invalid': ReactiveUDFormSubmitted && ReactiveUDForm.palletquantity.errors }"/>
+                                        [ngClass]="{ 'is-invalid': ReactiveUDFormSubmitted && ReactiveUDForm.palletquantity.errors }" />
                                     <div *ngIf="ReactiveUDFormSubmitted && ReactiveUDForm.palletquantity.errors"
                                         class="invalid-feedback">
                                         <div *ngIf="ReactiveUDForm.palletquantity.errors.required">Pallet
@@ -53,7 +57,8 @@
                                 <div class="form-group">
                                     <label for="UDGrade">Grade</label>
                                     <select id="UDGrade" formControlName="grade" class="form-control"
-                                        [ngClass]="{ 'is-invalid': ReactiveUDFormSubmitted && ReactiveUDForm.grade.errors }" disabled>
+                                        [ngClass]="{ 'is-invalid': ReactiveUDFormSubmitted && ReactiveUDForm.grade.errors }"
+                                        disabled>
                                         <option value="A">A</option>
                                         <option value="B">B</option>
                                         <option value="C">C</option>
@@ -139,7 +144,7 @@
                                 <div class="form-group">
                                     <label for="UDChecker">Checker</label>
                                     <input type="text" id="UDChecker" formControlName="checker" class="form-control"
-                                        [ngClass]="{ 'is-invalid': ReactiveUDFormSubmitted && ReactiveUDForm.checker.errors }"/>
+                                        [ngClass]="{ 'is-invalid': ReactiveUDFormSubmitted && ReactiveUDForm.checker.errors }" />
                                     <div *ngIf="ReactiveUDFormSubmitted && ReactiveUDForm.checker.errors"
                                         class="invalid-feedback">
                                         <div *ngIf="ReactiveUDForm.checker.errors.required">Checker Quantity is
@@ -165,16 +170,22 @@
                     <h4 class="card-title">Inspection Information</h4>
                     <div class="card-body">
                         <div class="row">
-
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="UDDate">Date</label>
-                                    <input type="text" id="UDDate" formControlName="date" class="form-control"
-                                        [ngClass]="{ 'is-invalid': ReactiveUDFormSubmitted && ReactiveUDForm.date.errors }" />
-                                    <div *ngIf="ReactiveUDFormSubmitted && ReactiveUDForm.date.errors"
-                                        class="invalid-feedback">
-                                        <div *ngIf="ReactiveUDForm.date.errors.required">Date is
-                                            required</div>
+                                    <div class="input-group">
+                                        <input class="form-control" placeholder="yyyy-mm-dd" name="Basic Date Picker"
+                                            formControlName="date" ngbDatepicker #basicDP="ngbDatepicker"
+                                            [ngClass]="{ 'is-invalid': ReactiveUDFormSubmitted && ReactiveUDForm.date.errors }"/>
+                                        <div class="input-group-append">
+                                            <button class="btn btn-outline-secondary feather icon-calendar"
+                                                (click)="basicDP.toggle()" type="button" rippleEffect></button>
+                                        </div>
+                                        <div *ngIf="ReactiveUDFormSubmitted && ReactiveUDForm.date.errors"
+                                            class="invalid-feedback">
+                                            <div *ngIf="ReactiveUDForm.date.errors.required">Date is
+                                                required</div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -321,19 +332,14 @@
                                     </div>
                                 </div>
                             </div>
-
-
-
-
-
-
-
-
-
-
-                            <div class="col-12">
+                            <div class="col-6">
                                 <div class="form-group">
-                                    <button class="btn btn-primary" rippleEffect>Register</button>
+                                    <button class="btn btn-primary btn-block" rippleEffect>Register</button>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <a (click)="cancelClick()" class="btn btn-warning btn-block" rippleEffect>Cancel</a>
                                 </div>
                             </div>
                         </div>

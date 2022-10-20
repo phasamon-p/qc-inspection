@@ -2,12 +2,8 @@ import { Component, OnInit, SimpleChanges } from '@angular/core';
 import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 
 import * as snippet from 'app/main/forms/form-validation/form-validation.snippetcode';
-import { MustMatch } from './_helpers/must-match.validator';
-import { FlatpickrOptions } from 'ng2-flatpickr';
 
 import { PalletService } from 'app/auth/service';
-import { pallet_dropdown } from 'app/auth/models';
-import { timingSafeEqual } from 'crypto';
 
 @Component({
   selector: 'app-input-data',
@@ -17,33 +13,15 @@ import { timingSafeEqual } from 'crypto';
 export class InputDataComponent implements OnInit {
   // public
   public contentHeader: object;
-
-  public _snippetCodeTDsimpleValidation = snippet.snippetCodeTDsimpleValidation;
-  public _snippetCodeTDMultiRuleValidation = snippet.snippetCodeTDMultiRuleValidation;
-  public _snippetCodeInputValidation = snippet.snippetCodeInputValidation;
   public _snippetCodeReactiveForms = snippet.snippetCodeReactiveForms;
-
-  public TDNameVar;
-  public TDEmailVar;
 
   public ReactiveUserDetailsForm: UntypedFormGroup;
   public ReactiveUDFormSubmitted = false;
 
-  public currentRow;
   public palletCode: Array<any>;
-  public selectedPalletCode;
-  public selectedRejectPallet : boolean = true;
-
-  public cars = [
-    { id: 1, name: 'PL220210040' },
-    { id: 2, name: 'PL220210041' },
-    { id: 3, name: 'PL220210042' },
-    { id: 4, name: 'PL220210043' },
-  ];
-
-  public birthDateOptions: FlatpickrOptions = {
-    altInput: true
-  };
+  // valiables about date
+  public date;
+  public ngbDateStruct;
 
   // Reactive User Details form data
   public UDForm = {
@@ -72,13 +50,15 @@ export class InputDataComponent implements OnInit {
     pickout: '',
     markerror: ''
   };
-   /**
-   *
-   * @param {HttpClient} _http
-   * @param {PalletService} _palletService
-   */
+  /**
+  *
+  * @param {HttpClient} _http
+  * @param {PalletService} _palletService
+  */
 
-  constructor(private formBuilder: UntypedFormBuilder, private _palletService: PalletService) {}
+  constructor(
+    private formBuilder: UntypedFormBuilder, 
+    private _palletService: PalletService) { }
 
   // getter for easy access to form fields
   get ReactiveUDForm() {
@@ -97,20 +77,41 @@ export class InputDataComponent implements OnInit {
   }
 
   changeRejectPallet(e) {
-    if(this.ReactiveUserDetailsForm.value.rejectpallet == 'true'){
+    if (this.ReactiveUserDetailsForm.value.rejectpallet == 'true') {
       // enabled
-      document.getElementById('UDPalletNumber').setAttribute("disabled","true");
-      document.getElementById('UDPalletQuantity').setAttribute("disabled","true");
+      document.getElementById('UDPalletNumber').setAttribute("disabled", "true");
+      document.getElementById('UDPalletQuantity').setAttribute("disabled", "true");
       // disabled
       document.getElementById('UDGrade').removeAttribute("disabled");
+      // set value
+      this.ReactiveUserDetailsForm.controls['palletnumber'].setValue('Reject Pallet');
+      this.ReactiveUserDetailsForm.controls['palletquantity'].setValue('0');
+      this.ReactiveUserDetailsForm.controls['grade'].setValue('');
     }
-    else{
+    else {
       // disabled
-      document.getElementById('UDGrade').setAttribute("disabled","true");
+      document.getElementById('UDGrade').setAttribute("disabled", "true");
       // enabled
       document.getElementById('UDPalletNumber').removeAttribute("disabled");
       document.getElementById('UDPalletQuantity').removeAttribute("disabled");
+      // set value
+      this.ReactiveUserDetailsForm.controls['grade'].setValue('A');
+      this.ReactiveUserDetailsForm.controls['palletnumber'].setValue('');
+      this.ReactiveUserDetailsForm.controls['palletquantity'].setValue('');
     }
+  }
+
+  dateToday(){
+    this.date = new Date();
+    this.ngbDateStruct = { day: this.date.getUTCDate(), month: this.date.getUTCMonth() + 1, year: this.date.getUTCFullYear()};
+  }
+
+  cancelClick(){
+    // console.log("Cancel Click");
+    this.ReactiveUserDetailsForm.reset();
+    this.ReactiveUserDetailsForm.controls['rejectpallet'].setValue('false');
+    this.ReactiveUserDetailsForm.controls['grade'].setValue('A');
+    this.ReactiveUserDetailsForm.controls['date'].setValue(this.ngbDateStruct);
   }
 
   // Lifecycle Hooks
@@ -120,38 +121,8 @@ export class InputDataComponent implements OnInit {
    * On init
    */
   ngOnInit() {
-  // api Pallet Service
-    this._palletService.getPalletCode()
-    .pipe()
-    .subscribe(palletcode => {
-      this.palletCode = palletcode.data;
-    });
-
-  // content header
-    this.contentHeader = {
-      headerTitle: 'Form Validation',
-      actionButton: true,
-      breadcrumb: {
-        type: '',
-        links: [
-          {
-            name: 'Home',
-            isLink: true,
-            link: '/'
-          },
-          {
-            name: 'Forms',
-            isLink: true,
-            link: '/'
-          },
-          {
-            name: 'Form Validation',
-            isLink: false
-          }
-        ]
-      }
-    };
-
+    // declare date today
+    this.dateToday();
     // Reactive form initialization
     this.ReactiveUserDetailsForm = this.formBuilder.group(
       {
@@ -180,15 +151,41 @@ export class InputDataComponent implements OnInit {
         pickout: [''],
         markerror: ['', Validators.required],
       }
-      // ,
-      // {
-      //   validator: MustMatch('password', 'confPassword')
-      // }
     );
-  }
+    // set value to formcontrol
+    this.ReactiveUserDetailsForm.controls['grade'].setValue('A');
+    this.ReactiveUserDetailsForm.controls['date'].setValue(this.ngbDateStruct);
 
-  ngOnChanges(changes: SimpleChanges) {
-    console.log(changes)
-  }
+    // api Pallet Service
+    this._palletService.getPalletCode()
+      .pipe()
+      .subscribe(palletcode => {
+        this.palletCode = palletcode.data;
+      });
 
+    // content header
+    this.contentHeader = {
+      headerTitle: 'Form Validation',
+      actionButton: true,
+      breadcrumb: {
+        type: '',
+        links: [
+          {
+            name: 'Home',
+            isLink: true,
+            link: '/'
+          },
+          {
+            name: 'Forms',
+            isLink: true,
+            link: '/'
+          },
+          {
+            name: 'Form Validation',
+            isLink: false
+          }
+        ]
+      }
+    };
+  }
 }

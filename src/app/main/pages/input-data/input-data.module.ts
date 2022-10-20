@@ -6,6 +6,8 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { Ng2FlatpickrModule } from 'ng2-flatpickr';
+import { TimePickerI18nModule } from 'app/main/forms/form-elements/date-time-picker/time-picker-i18n/time-picker-i18n.module';
+import { DatePickerI18nModule } from 'app/main/forms/form-elements/date-time-picker/date-picker-i18n/date-picker-i18n.module';
 
 import { AuthGuard } from 'app/auth/helpers';
 import { CoreCommonModule } from '@core/common.module';
@@ -26,9 +28,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [
-    InputDataComponent
-  ],
+  declarations: [InputDataComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
@@ -39,7 +39,9 @@ const routes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     NgSelectModule,
-    Ng2FlatpickrModule
+    Ng2FlatpickrModule,
+    TimePickerI18nModule,
+    DatePickerI18nModule
   ],
   // providers: [ProfileService]
 })
