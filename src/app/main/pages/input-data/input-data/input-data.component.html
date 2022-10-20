@@ -1,415 +1,345 @@
 <section id="multiple-validation">
     <div class="row">
         <!-- Import Pallet -->
-        <div class="col-md-6">
-            <core-card-snippet>
-                <h4 class="card-title">Import Pallet</h4>
-                <div class="card-body">
-                    <form class="form-horizontal" (ngSubmit)="(TDMultiRuleForm.form.valid)" #TDMultiRuleForm="ngForm">
+        <div class="col-6">
+            <form [formGroup]="ReactiveUserDetailsForm" (ngSubmit)="ReactiveUDFormOnSubmit()">
+                <core-card-snippet [snippetCode]="_snippetCodeReactiveForms">
+                    <h4 class="card-title">Import Pallet</h4>
+                    <div class="card-body">
                         <div class="row">
-                            <div class="col-sm-12">
+                            <div class="col-md-12">
                                 <div class="form-group">
-                                    <label class="form-control-label" for="TDMultiRuleName">Reject Pallet<span style="color: red;"> * </span>:</label>
-                                    <div class="form-check form-check-inline" style="margin-left: 0.75rem;">
-                                        <input class="form-check-input" type="radio" name="inlineRadioOptions"
-                                            id="inlineRadio1" value="option1" checked />
-                                        <label class="form-check-label" for="inlineRadio1">Yes</label>
+                                    <label for="UDRejectPallet" class="d-block mb-1">Reject Pallet</label>
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input type="radio" id="yes" value="true" name="rejectpallet" class="custom-control-input" (change)="changeRejectPallet($event)" formControlName="rejectpallet"/>
+                                        <label class="custom-control-label" for="yes">Yes</label>
                                     </div>
-                                    <div class="form-check form-check-inline" style="margin-left: 0.75rem;">
-                                        <input class="form-check-input" type="radio" name="inlineRadioOptions"
-                                            id="inlineRadio2" value="option2" />
-                                        <label class="form-check-label" for="inlineRadio2">No</label>
+                                    <div class="custom-control custom-radio custom-control-inline">
+                                        <input type="radio" id="no" value="false" name="rejectpallet" class="custom-control-input" (change)="changeRejectPallet($event)" formControlName="rejectpallet"/>
+                                        <label class="custom-control-label" for="no">No</label>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <!-- Pallet Number-->
-                        <div class="row">
-                            <div class="col-sm-12">
+                            <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="pallernumber">Pallet Number<span style="color: red;"> * </span>:</label>
-                                    <ng-select [(ngModel)]="selectedPalletCode" class="form-control">
-                                        
-                                            <ng-option *ngFor="let car of cars" [value]="car.id">{{car.name}}</ng-option>
-                                 
-                                        
-                                     </ng-select>
-                                    <!-- <select class="form-control" name="pallernumber"
-                                        id="pallernumber">
-                                        <option>active</option>
-                                        <option>inactive</option>
-                                        <option>pending</option>
-                                    </select> -->
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Pallet Quantity -->
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <div class="form-group">
-                                    <label class="form-control-label" for="palletquantity">Pallet Quantity<span style="color: red;"> * </span>:</label>
-                                    <input class="form-control input-md"
-                                        [class.error]="!TDMultiRuleNameRef.valid && TDMultiRuleNameRef.touched" ngModel
-                                        #TDMultiRuleNameRef="ngModel" required id="TDMultiRuleName"
-                                        name="palletquantity" type="text" placeholder="Pallet Quantity" />
-                                    <span *ngIf="!TDMultiRuleNameRef.valid && TDMultiRuleNameRef.touched"
-                                        class="invalid-form">
-                                        <small class="form-text text-danger"
-                                            *ngIf="TDMultiRuleNameRef.errors.required">This field is required!</small>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Grade -->
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <div class="form-group">
-                                    <label for="grade">Grade<span style="color: red;"> * </span>:</label>
-                                    <select class="form-control" name="grade"
-                                        id="grade">
-                                        <option>active</option>
-                                        <option>inactive</option>
-                                        <option>pending</option>
+                                    <label for="UDPalletNumber">Pallet Number</label>
+                                    <select id="UDPalletNumber" formControlName="palletnumber" class="form-control"
+                                        [ngClass]="{ 'is-invalid': ReactiveUDFormSubmitted && ReactiveUDForm.palletnumber.errors }">
+                                        <option *ngFor="let pallet of palletCode" [value]="pallet">{{pallet}}
+                                        </option>
                                     </select>
+                                    <div *ngIf="ReactiveUDFormSubmitted && ReactiveUDForm.palletnumber.errors"
+                                        class="invalid-feedback">
+                                        <div *ngIf="ReactiveUDForm.palletnumber.errors.required">Pallet Number
+                                            is required
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <!-- Job Number -->
-                        <div class="row">
-                            <div class="col-sm-12">
+                            <div class="col-md-12">
                                 <div class="form-group">
-                                    <label class="form-control-label" for="jobnumber">Job Number<span style="color: red;"> * </span>:</label>
-                                    <input class="form-control input-md"
-                                        [class.error]="!TDMultiRuleEmailRef.valid && TDMultiRuleEmailRef.touched"
-                                        ngModel #TDMultiRuleEmailRef="ngModel" required email id="jobnumber"
-                                        name="jobnumber" type="text" placeholder="Job Number" />
-                                    <span *ngIf="!TDMultiRuleEmailRef.valid && TDMultiRuleEmailRef.touched"
-                                        class="invalid-form">
-                                        <small class="form-text text-danger">Job Number must be valid!</small>
-                                    </span>
+                                    <label for="UDPalletQuantity">Pallet Quantity</label>
+                                    <input type="number" id="UDPalletQuantity" formControlName="palletquantity"
+                                        class="form-control"
+                                        [ngClass]="{ 'is-invalid': ReactiveUDFormSubmitted && ReactiveUDForm.palletquantity.errors }"/>
+                                    <div *ngIf="ReactiveUDFormSubmitted && ReactiveUDForm.palletquantity.errors"
+                                        class="invalid-feedback">
+                                        <div *ngIf="ReactiveUDForm.palletquantity.errors.required">Pallet
+                                            Quantity is required</div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <!-- Job Name -->
-                        <div class="row">
-                            <div class="col-sm-12">
+                            <div class="col-md-12">
                                 <div class="form-group">
-                                    <label class="form-control-label" for="jobname">Job Name<span style="color: red;"> * </span>:</label>
-                                    <input class="form-control input-md"
-                                        [class.error]="!TDMultiRuleEmailRef.valid && TDMultiRuleEmailRef.touched"
-                                        ngModel #TDMultiRuleEmailRef="ngModel" required email id="jobname"
-                                        name="jobname" type="text" placeholder="Job Name" />
-                                    <span *ngIf="!TDMultiRuleEmailRef.valid && TDMultiRuleEmailRef.touched"
-                                        class="invalid-form">
-                                        <small class="form-text text-danger">Job Name must be valid!</small>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Job Quantity -->
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <div class="form-group">
-                                    <label class="form-control-label" for="jobquantity">Job Quantity<span style="color: red;"> * </span>:</label>
-                                    <input class="form-control input-md"
-                                        [class.error]="!TDMultiRuleEmailRef.valid && TDMultiRuleEmailRef.touched"
-                                        ngModel #TDMultiRuleEmailRef="ngModel" required email id="jobquantity"
-                                        name="jobquantity" type="text" placeholder="Job Quantity" />
-                                    <span *ngIf="!TDMultiRuleEmailRef.valid && TDMultiRuleEmailRef.touched"
-                                        class="invalid-form">
-                                        <small class="form-text text-danger">Job Quantity must be valid!</small>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- F Number -->
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <div class="form-group">
-                                    <label for="fnumber">F Number<span style="color: red;"> * </span>:</label>
-                                    <select class="form-control" name="fnumber"
-                                        id="fnumber">
-                                        <option>active</option>
-                                        <option>inactive</option>
-                                        <option>pending</option>
+                                    <label for="UDGrade">Grade</label>
+                                    <select id="UDGrade" formControlName="grade" class="form-control"
+                                        [ngClass]="{ 'is-invalid': ReactiveUDFormSubmitted && ReactiveUDForm.grade.errors }" disabled>
+                                        <option value="A">A</option>
+                                        <option value="B">B</option>
+                                        <option value="C">C</option>
+                                        <option value="D">D</option>
+                                        <option value="E">E</option>
+                                        <option value="F">F</option>
+                                        <option value="G">G</option>
                                     </select>
+                                    <div *ngIf="ReactiveUDFormSubmitted && ReactiveUDForm.grade.errors"
+                                        class="invalid-feedback">
+                                        <div *ngIf="ReactiveUDForm.grade.errors.required">Grade is required
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <!-- Delta -->
-                        <div class="row">
-                            <div class="col-sm-12">
+                            <div class="col-md-12">
                                 <div class="form-group">
-                                    <label class="form-control-label" for="delta">Delta<span style="color: red;"> * </span>:</label>
-                                    <input class="form-control input-md"
-                                        [class.error]="!TDMultiRuleEmailRef.valid && TDMultiRuleEmailRef.touched"
-                                        ngModel #TDMultiRuleEmailRef="ngModel" required email id="delta"
-                                        name="delta" type="text" placeholder="Delta" />
-                                    <span *ngIf="!TDMultiRuleEmailRef.valid && TDMultiRuleEmailRef.touched"
-                                        class="invalid-form">
-                                        <small class="form-text text-danger">Delta must be valid!</small>
-                                    </span>
+                                    <label for="UDJobNumber">Job Number</label>
+                                    <input type="text" id="UDJobNumber" formControlName="jobnumber" class="form-control"
+                                        [ngClass]="{ 'is-invalid': ReactiveUDFormSubmitted && ReactiveUDForm.jobnumber.errors }" />
+                                    <div *ngIf="ReactiveUDFormSubmitted && ReactiveUDForm.jobnumber.errors"
+                                        class="invalid-feedback">
+                                        <div *ngIf="ReactiveUDForm.jobnumber.errors.required">Job Nunber is
+                                            required</div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <!-- Checker -->
-                        <div class="row">
-                            <div class="col-sm-12">
+                            <div class="col-md-12">
                                 <div class="form-group">
-                                    <label class="form-control-label" for="checker">Checker<span style="color: red;"> * </span>:</label>
-                                    <input class="form-control input-md"
-                                        [class.error]="!TDMultiRuleEmailRef.valid && TDMultiRuleEmailRef.touched"
-                                        ngModel #TDMultiRuleEmailRef="ngModel" required email id="checker"
-                                        name="checker" type="text" placeholder="Checker" />
-                                    <span *ngIf="!TDMultiRuleEmailRef.valid && TDMultiRuleEmailRef.touched"
-                                        class="invalid-form">
-                                        <small class="form-text text-danger">Checker must be valid!</small>
-                                    </span>
+                                    <label for="UDJobName">Job Name</label>
+                                    <input type="text" id="UDJobName" formControlName="jobname" class="form-control"
+                                        [ngClass]="{ 'is-invalid': ReactiveUDFormSubmitted && ReactiveUDForm.jobname.errors }" />
+                                    <div *ngIf="ReactiveUDFormSubmitted && ReactiveUDForm.jobname.errors"
+                                        class="invalid-feedback">
+                                        <div *ngIf="ReactiveUDForm.jobname.errors.required">Job Name is
+                                            required</div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <!-- Remark -->
-                        <div class="row">
-                            <div class="col-sm-12">
+                            <div class="col-md-12">
                                 <div class="form-group">
-                                    <label class="form-control-label" for="remark">Remark</label>
-                                    <input class="form-control input-md"
-                                        [class.error]="!TDMultiRuleEmailRef.valid && TDMultiRuleEmailRef.touched"
-                                        ngModel #TDMultiRuleEmailRef="ngModel" required email id="remark"
-                                        name="remark" type="text" placeholder="Remark" />
-                                    <span *ngIf="!TDMultiRuleEmailRef.valid && TDMultiRuleEmailRef.touched"
-                                        class="invalid-form">
-                                        <small class="form-text text-danger">Remark must be valid!</small>
-                                    </span>
+                                    <label for="UDJobQuantity">Job Quantity</label>
+                                    <input type="text" id="UDJobQuantity" formControlName="jobquantity"
+                                        class="form-control"
+                                        [ngClass]="{ 'is-invalid': ReactiveUDFormSubmitted && ReactiveUDForm.jobquantity.errors }" />
+                                    <div *ngIf="ReactiveUDFormSubmitted && ReactiveUDForm.jobquantity.errors"
+                                        class="invalid-feedback">
+                                        <div *ngIf="ReactiveUDForm.jobquantity.errors.required">Job Quantity is
+                                            required</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="UDFNumber">F Number</label>
+                                    <select id="UDFNumber" formControlName="fnumber" class="form-control"
+                                        [ngClass]="{ 'is-invalid': ReactiveUDFormSubmitted && ReactiveUDForm.fnumber.errors }">
+                                        <option value="USA">USA</option>
+                                        <option value="Germany">Germany</option>
+                                        <option value="Russia">Russia</option>
+                                        <option value="UK">UK</option>
+                                    </select>
+                                    <div *ngIf="ReactiveUDFormSubmitted && ReactiveUDForm.fnumber.errors"
+                                        class="invalid-feedback">
+                                        <div *ngIf="ReactiveUDForm.fnumber.errors.required">F Number is required
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="UDDelta">Delta</label>
+                                    <input type="text" id="UDDelta" formControlName="delta" class="form-control"
+                                        [ngClass]="{ 'is-invalid': ReactiveUDFormSubmitted && ReactiveUDForm.delta.errors }" />
+                                    <div *ngIf="ReactiveUDFormSubmitted && ReactiveUDForm.delta.errors"
+                                        class="invalid-feedback">
+                                        <div *ngIf="ReactiveUDForm.delta.errors.required">Delta Quantity is
+                                            required</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="UDChecker">Checker</label>
+                                    <input type="text" id="UDChecker" formControlName="checker" class="form-control"
+                                        [ngClass]="{ 'is-invalid': ReactiveUDFormSubmitted && ReactiveUDForm.checker.errors }"/>
+                                    <div *ngIf="ReactiveUDFormSubmitted && ReactiveUDForm.checker.errors"
+                                        class="invalid-feedback">
+                                        <div *ngIf="ReactiveUDForm.checker.errors.required">Checker Quantity is
+                                            required</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="UDRemark">Remark</label>
+                                    <input type="text" id="UDRemark" formControlName="remark" class="form-control" />
                                 </div>
                             </div>
                         </div>
-                    </form>
-                </div>
-            </core-card-snippet>
+                    </div>
+                </core-card-snippet>
+            </form>
         </div>
+        <!-- Inspection Information -->
+        <div class="col-6">
+            <form [formGroup]="ReactiveUserDetailsForm" (ngSubmit)="ReactiveUDFormOnSubmit()">
+                <core-card-snippet [snippetCode]="_snippetCodeReactiveForms">
+                    <h4 class="card-title">Inspection Information</h4>
+                    <div class="card-body">
+                        <div class="row">
 
-        <!-- Inspected Information -->
-        <div class="col-md-6">
-            <core-card-snippet>
-                <h4 class="card-title">Inspected Information</h4>
-                <div class="card-body">
-                    <form class="form-horizontal" (ngSubmit)="(TDMultiRuleForm.form.valid)" #TDMultiRuleForm="ngForm">
-                        <!-- Row1 -->
-                        <div class="row">
-                            <!-- Date-->
-                            <div class="col-sm-6">
+                            <div class="col-md-6">
                                 <div class="form-group">
-                                    <label class="form-control-label" for="date">Date</label>
-                                    <input class="form-control input-md"
-                                        [class.error]="!TDMultiRuleNameRef.valid && TDMultiRuleNameRef.touched" ngModel
-                                        #TDMultiRuleNameRef="ngModel" required id="date"
-                                        name="date" type="text" placeholder="Date" />
-                                    <span *ngIf="!TDMultiRuleNameRef.valid && TDMultiRuleNameRef.touched"
-                                        class="invalid-form">
-                                        <small class="form-text text-danger"
-                                            *ngIf="TDMultiRuleNameRef.errors.required">This field is required!</small>
-                                    </span>
+                                    <label for="UDDate">Date</label>
+                                    <input type="text" id="UDDate" formControlName="date" class="form-control"
+                                        [ngClass]="{ 'is-invalid': ReactiveUDFormSubmitted && ReactiveUDForm.date.errors }" />
+                                    <div *ngIf="ReactiveUDFormSubmitted && ReactiveUDForm.date.errors"
+                                        class="invalid-feedback">
+                                        <div *ngIf="ReactiveUDForm.date.errors.required">Date is
+                                            required</div>
+                                    </div>
                                 </div>
                             </div>
-                            <!-- Waste-->
-                            <div class="col-sm-6">
+                            <div class="col-md-6">
                                 <div class="form-group">
-                                    <label class="form-control-label" for="waste">Waste</label>
-                                    <input class="form-control input-md"
-                                        [class.error]="!TDMultiRuleNameRef.valid && TDMultiRuleNameRef.touched" ngModel
-                                        #TDMultiRuleNameRef="ngModel" required id="waste"
-                                        name="waste" type="text" placeholder="Waste" />
-                                    <span *ngIf="!TDMultiRuleNameRef.valid && TDMultiRuleNameRef.touched"
-                                        class="invalid-form">
-                                        <small class="form-text text-danger"
-                                            *ngIf="TDMultiRuleNameRef.errors.required">This field is required!</small>
-                                    </span>
+                                    <label for="UDWaste">Waste</label>
+                                    <input type="text" id="UDWaste" formControlName="waste" class="form-control"
+                                        [ngClass]="{ 'is-invalid': ReactiveUDFormSubmitted && ReactiveUDForm.waste.errors }" />
+                                    <div *ngIf="ReactiveUDFormSubmitted && ReactiveUDForm.waste.errors"
+                                        class="invalid-feedback">
+                                        <div *ngIf="ReactiveUDForm.waste.errors.required">Waste is
+                                            required</div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <!-- Row2 -->
-                        <div class="row">
-                            <!-- Batch -->
-                            <div class="col-sm-6">
+                            <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="batch">Batch<span style="color: red;"> * </span>:</label>
-                                    <select class="form-control" name="batch"
-                                        id="batch">
-                                        <option>active</option>
-                                        <option>inactive</option>
-                                        <option>pending</option>
+                                    <label for="UDBatch">Batch</label>
+                                    <select id="UDBatch" formControlName="batch" class="form-control"
+                                        [ngClass]="{ 'is-invalid': ReactiveUDFormSubmitted && ReactiveUDForm.batch.errors }">
+                                        <option value="USA">USA</option>
+                                        <option value="Germany">Germany</option>
+                                        <option value="Russia">Russia</option>
+                                        <option value="UK">UK</option>
                                     </select>
+                                    <div *ngIf="ReactiveUDFormSubmitted && ReactiveUDForm.batch.errors"
+                                        class="invalid-feedback">
+                                        <div *ngIf="ReactiveUDForm.batch.errors.required">Batch is required
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <!-- Black -->
-                            <div class="col-sm-6">
+                            <div class="col-md-6">
                                 <div class="form-group">
-                                    <label class="form-control-label" for="black">Black</label>
-                                    <input class="form-control input-md"
-                                        [class.error]="!TDMultiRuleNameRef.valid && TDMultiRuleNameRef.touched" ngModel
-                                        #TDMultiRuleNameRef="ngModel" required id="black"
-                                        name="black" type="text" placeholder="Black" />
-                                    <span *ngIf="!TDMultiRuleNameRef.valid && TDMultiRuleNameRef.touched"
-                                        class="invalid-form">
-                                        <small class="form-text text-danger"
-                                            *ngIf="TDMultiRuleNameRef.errors.required">This field is required!</small>
-                                    </span>
+                                    <label for="UDBlack">Black</label>
+                                    <input type="text" id="UDBlack" formControlName="black" class="form-control"
+                                        [ngClass]="{ 'is-invalid': ReactiveUDFormSubmitted && ReactiveUDForm.black.errors }" />
+                                    <div *ngIf="ReactiveUDFormSubmitted && ReactiveUDForm.black.errors"
+                                        class="invalid-feedback">
+                                        <div *ngIf="ReactiveUDForm.black.errors.required">Black is
+                                            required</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="UDInspectQuantity">Inspect Quantity</label>
+                                    <input type="text" id="UDInspectQuantity" formControlName="inspectquantity"
+                                        class="form-control"
+                                        [ngClass]="{ 'is-invalid': ReactiveUDFormSubmitted && ReactiveUDForm.inspectquantity.errors }" />
+                                    <div *ngIf="ReactiveUDFormSubmitted && ReactiveUDForm.inspectquantity.errors"
+                                        class="invalid-feedback">
+                                        <div *ngIf="ReactiveUDForm.inspectquantity.errors.required">Inspect Quantity
+                                            Quantity is
+                                            required</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="UDColor">Color</label>
+                                    <input type="text" id="UDColor" formControlName="color" class="form-control"
+                                        [ngClass]="{ 'is-invalid': ReactiveUDFormSubmitted && ReactiveUDForm.color.errors }" />
+                                    <div *ngIf="ReactiveUDFormSubmitted && ReactiveUDForm.color.errors"
+                                        class="invalid-feedback">
+                                        <div *ngIf="ReactiveUDForm.color.errors.required">Color Quantity is
+                                            required</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="UDAcceptedQuantity">Accepted Quantity</label>
+                                    <input type="text" id="UDAcceptedQuantity" formControlName="acceptedquantity"
+                                        class="form-control"
+                                        [ngClass]="{ 'is-invalid': ReactiveUDFormSubmitted && ReactiveUDForm.acceptedquantity.errors }" />
+                                    <div *ngIf="ReactiveUDFormSubmitted && ReactiveUDForm.acceptedquantity.errors"
+                                        class="invalid-feedback">
+                                        <div *ngIf="ReactiveUDForm.acceptedquantity.errors.required">Accepted Quantity
+                                            Quantity is
+                                            required</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="UDWhite">White</label>
+                                    <input type="text" id="UDWhite" formControlName="white" class="form-control"
+                                        [ngClass]="{ 'is-invalid': ReactiveUDFormSubmitted && ReactiveUDForm.white.errors }" />
+                                    <div *ngIf="ReactiveUDFormSubmitted && ReactiveUDForm.white.errors"
+                                        class="invalid-feedback">
+                                        <div *ngIf="ReactiveUDForm.white.errors.required">White is
+                                            required</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="UDRejectedQuantity">Rejected Quantity</label>
+                                    <input type="text" id="UDRejectedQuantity" formControlName="rejectedquantity"
+                                        class="form-control"
+                                        [ngClass]="{ 'is-invalid': ReactiveUDFormSubmitted && ReactiveUDForm.rejectedquantity.errors }" />
+                                    <div *ngIf="ReactiveUDFormSubmitted && ReactiveUDForm.rejectedquantity.errors"
+                                        class="invalid-feedback">
+                                        <div *ngIf="ReactiveUDForm.rejectedquantity.errors.required">Rejected Quantity
+                                            Quantity is
+                                            required</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="UDMeasure">Measure</label>
+                                    <input type="text" id="UDMeasure" formControlName="measure" class="form-control"
+                                        [ngClass]="{ 'is-invalid': ReactiveUDFormSubmitted && ReactiveUDForm.measure.errors }" />
+                                    <div *ngIf="ReactiveUDFormSubmitted && ReactiveUDForm.measure.errors"
+                                        class="invalid-feedback">
+                                        <div *ngIf="ReactiveUDForm.measure.errors.required">Measure Quantity is
+                                            required</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="UDPickOut">Pick Out</label>
+                                    <input type="text" id="UDPickOut" formControlName="pickout" class="form-control"
+                                        [ngClass]="{ 'is-invalid': ReactiveUDFormSubmitted && ReactiveUDForm.pickout.errors }" />
+                                    <div *ngIf="ReactiveUDFormSubmitted && ReactiveUDForm.pickout.errors"
+                                        class="invalid-feedback">
+                                        <div *ngIf="ReactiveUDForm.pickout.errors.required">Measure Quantity is
+                                            required</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="UDMarkError">Mark Error</label>
+                                    <input type="text" id="UDMarkError" formControlName="markerror" class="form-control"
+                                        [ngClass]="{ 'is-invalid': ReactiveUDFormSubmitted && ReactiveUDForm.markerror.errors }" />
+                                    <div *ngIf="ReactiveUDFormSubmitted && ReactiveUDForm.markerror.errors"
+                                        class="invalid-feedback">
+                                        <div *ngIf="ReactiveUDForm.markerror.errors.required">Mark Error Quantity is
+                                            required</div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+
+
+
+
+
+
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <button class="btn btn-primary" rippleEffect>Register</button>
                                 </div>
                             </div>
                         </div>
-                        <!-- Row3 -->
-                        <div class="row">
-                            <!-- Inspect Quantity -->
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label class="form-control-label" for="inspectquantity">Inspect Quantity<span style="color: red;"> * </span>:</label>
-                                    <input class="form-control input-md"
-                                        [class.error]="!TDMultiRuleNameRef.valid && TDMultiRuleNameRef.touched" ngModel
-                                        #TDMultiRuleNameRef="ngModel" required id="inspectquantity"
-                                        name="inspectquantity" type="text" placeholder="Inspect Quantity" />
-                                    <span *ngIf="!TDMultiRuleNameRef.valid && TDMultiRuleNameRef.touched"
-                                        class="invalid-form">
-                                        <small class="form-text text-danger"
-                                            *ngIf="TDMultiRuleNameRef.errors.required">This field is required!</small>
-                                    </span>
-                                </div>
-                            </div>
-                            <!-- Color -->
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label class="form-control-label" for="color">Color</label>
-                                    <input class="form-control input-md"
-                                        [class.error]="!TDMultiRuleNameRef.valid && TDMultiRuleNameRef.touched" ngModel
-                                        #TDMultiRuleNameRef="ngModel" required id="color"
-                                        name="color" type="text" placeholder="Color" />
-                                    <span *ngIf="!TDMultiRuleNameRef.valid && TDMultiRuleNameRef.touched"
-                                        class="invalid-form">
-                                        <small class="form-text text-danger"
-                                            *ngIf="TDMultiRuleNameRef.errors.required">This field is required!</small>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Row4 -->
-                        <div class="row">
-                            <!-- Accepted Quantity -->
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label class="form-control-label" for="acceptedquantity">Accepted Quantity<span style="color: red;"> * </span>:</label>
-                                    <input class="form-control input-md"
-                                        [class.error]="!TDMultiRuleNameRef.valid && TDMultiRuleNameRef.touched" ngModel
-                                        #TDMultiRuleNameRef="ngModel" required id="acceptedquantity"
-                                        name="acceptedquantity" type="text" placeholder="Accepted Quantity" />
-                                    <span *ngIf="!TDMultiRuleNameRef.valid && TDMultiRuleNameRef.touched"
-                                        class="invalid-form">
-                                        <small class="form-text text-danger"
-                                            *ngIf="TDMultiRuleNameRef.errors.required">This field is required!</small>
-                                    </span>
-                                </div>
-                            </div>
-                            <!-- White -->
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label class="form-control-label" for="white">White</label>
-                                    <input class="form-control input-md"
-                                        [class.error]="!TDMultiRuleNameRef.valid && TDMultiRuleNameRef.touched" ngModel
-                                        #TDMultiRuleNameRef="ngModel" required id="white"
-                                        name="white" type="text" placeholder="White" />
-                                    <span *ngIf="!TDMultiRuleNameRef.valid && TDMultiRuleNameRef.touched"
-                                        class="invalid-form">
-                                        <small class="form-text text-danger"
-                                            *ngIf="TDMultiRuleNameRef.errors.required">This field is required!</small>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Row5 -->
-                        <div class="row">
-                            <!-- Rejected Quantity -->
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label class="form-control-label" for="rejectedquantity">Rejected Quantity<span style="color: red;"> * </span>:</label>
-                                    <input class="form-control input-md"
-                                        [class.error]="!TDMultiRuleNameRef.valid && TDMultiRuleNameRef.touched" ngModel
-                                        #TDMultiRuleNameRef="ngModel" required id="rejectedquantity"
-                                        name="rejectedquantity" type="text" placeholder="Rejected Quantity" />
-                                    <span *ngIf="!TDMultiRuleNameRef.valid && TDMultiRuleNameRef.touched"
-                                        class="invalid-form">
-                                        <small class="form-text text-danger"
-                                            *ngIf="TDMultiRuleNameRef.errors.required">This field is required!</small>
-                                    </span>
-                                </div>
-                            </div>
-                            <!-- Measure -->
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label class="form-control-label" for="measure">Measure</label>
-                                    <input class="form-control input-md"
-                                        [class.error]="!TDMultiRuleNameRef.valid && TDMultiRuleNameRef.touched" ngModel
-                                        #TDMultiRuleNameRef="ngModel" required id="measure"
-                                        name="measure" type="text" placeholder="Measure" />
-                                    <span *ngIf="!TDMultiRuleNameRef.valid && TDMultiRuleNameRef.touched"
-                                        class="invalid-form">
-                                        <small class="form-text text-danger"
-                                            *ngIf="TDMultiRuleNameRef.errors.required">This field is required!</small>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Row6 -->
-                        <div class="row">
-                            <!-- Pick Out -->
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label class="form-control-label" for="pickout">Pick Out<span style="color: red;"> *</span></label>
-                                    <input class="form-control input-md"
-                                        [class.error]="!TDMultiRuleNameRef.valid && TDMultiRuleNameRef.touched" ngModel
-                                        #TDMultiRuleNameRef="ngModel" required id="pickout"
-                                        name="pickout" type="text" placeholder="Pick Out" />
-                                    <span *ngIf="!TDMultiRuleNameRef.valid && TDMultiRuleNameRef.touched"
-                                        class="invalid-form">
-                                        <small class="form-text text-danger"
-                                            *ngIf="TDMultiRuleNameRef.errors.required">This field is required!</small>
-                                    </span>
-                                </div>
-                            </div>
-                            <!-- Make Error -->
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label class="form-control-label" for="makeerror">Make Error</label>
-                                    <input class="form-control input-md"
-                                        [class.error]="!TDMultiRuleNameRef.valid && TDMultiRuleNameRef.touched" ngModel
-                                        #TDMultiRuleNameRef="ngModel" required id="makeerror"
-                                        name="makeerror" type="text" placeholder="Make Error" />
-                                    <span *ngIf="!TDMultiRuleNameRef.valid && TDMultiRuleNameRef.touched"
-                                        class="invalid-form">
-                                        <small class="form-text text-danger"
-                                            *ngIf="TDMultiRuleNameRef.errors.required">This field is required!</small>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <!-- Save -->
-                                <button type="submit" [disabled]="!TDMultiRuleForm.form.valid" class="btn btn-primary btn-block"
-                                    rippleEffect>
-                                    Save
-                                </button>
-                            </div>
-                            <div class="col-sm-6">
-                                <!-- Cancel -->
-                                <button type="submit" [disabled]="!TDMultiRuleForm.form.valid" class="btn btn-warning btn-block"
-                                    rippleEffect>
-                                    Cancel
-                                </button>
-                            </div>
-                            
-                        </div>
-                    </form>
-                </div>
-            </core-card-snippet>
+                    </div>
+                </core-card-snippet>
+            </form>
         </div>
     </div>
 </section>

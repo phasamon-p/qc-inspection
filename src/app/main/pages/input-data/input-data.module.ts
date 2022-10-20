@@ -5,6 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { Ng2FlatpickrModule } from 'ng2-flatpickr';
 
 import { AuthGuard } from 'app/auth/helpers';
 import { CoreCommonModule } from '@core/common.module';
@@ -37,7 +38,8 @@ const routes: Routes = [
     CardSnippetModule,
     FormsModule,
     ReactiveFormsModule,
-    NgSelectModule
+    NgSelectModule,
+    Ng2FlatpickrModule
   ],
   // providers: [ProfileService]
 })

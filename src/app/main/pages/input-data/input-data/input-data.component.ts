@@ -1,10 +1,13 @@
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit, SimpleChanges } from '@angular/core';
 import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 
 import * as snippet from 'app/main/forms/form-validation/form-validation.snippetcode';
 import { MustMatch } from './_helpers/must-match.validator';
+import { FlatpickrOptions } from 'ng2-flatpickr';
 
 import { PalletService } from 'app/auth/service';
+import { pallet_dropdown } from 'app/auth/models';
+import { timingSafeEqual } from 'crypto';
 
 @Component({
   selector: 'app-input-data',
@@ -29,24 +32,45 @@ export class InputDataComponent implements OnInit {
   public currentRow;
   public palletCode: Array<any>;
   public selectedPalletCode;
+  public selectedRejectPallet : boolean = true;
 
   public cars = [
-    { id: 1, name: 'Volvo' },
-    { id: 2, name: 'Saab' },
-    { id: 3, name: 'Opel' },
-    { id: 4, name: 'Audi' },
-];
+    { id: 1, name: 'PL220210040' },
+    { id: 2, name: 'PL220210041' },
+    { id: 3, name: 'PL220210042' },
+    { id: 4, name: 'PL220210043' },
+  ];
+
+  public birthDateOptions: FlatpickrOptions = {
+    altInput: true
+  };
 
   // Reactive User Details form data
   public UDForm = {
-    userName: '',
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: '',
-    confPassword: '',
-    age: '',
-    phoneNumber: ''
+    rejectpallet: '',
+    palletnumber: '',
+    palletquantity: '',
+    grade: '',
+    jobnumber: '',
+    jobname: '',
+    jobquantity: '',
+    fnumber: '',
+    delta: '',
+    checker: '',
+    remark: '',
+
+    date: '',
+    waste: '',
+    batch: '',
+    black: '',
+    inspectquantity: '',
+    color: '',
+    acceptedquantity: '',
+    white: '',
+    rejectedquantity: '',
+    measure: '',
+    pickout: '',
+    markerror: ''
   };
    /**
    *
@@ -72,6 +96,23 @@ export class InputDataComponent implements OnInit {
     alert('SUCCESS!! :-)\n\n' + JSON.stringify(this.ReactiveUserDetailsForm.value));
   }
 
+  changeRejectPallet(e) {
+    if(this.ReactiveUserDetailsForm.value.rejectpallet == 'true'){
+      // enabled
+      document.getElementById('UDPalletNumber').setAttribute("disabled","true");
+      document.getElementById('UDPalletQuantity').setAttribute("disabled","true");
+      // disabled
+      document.getElementById('UDGrade').removeAttribute("disabled");
+    }
+    else{
+      // disabled
+      document.getElementById('UDGrade').setAttribute("disabled","true");
+      // enabled
+      document.getElementById('UDPalletNumber').removeAttribute("disabled");
+      document.getElementById('UDPalletQuantity').removeAttribute("disabled");
+    }
+  }
+
   // Lifecycle Hooks
   // -----------------------------------------------------------------------------------------------------
 
@@ -79,13 +120,14 @@ export class InputDataComponent implements OnInit {
    * On init
    */
   ngOnInit() {
+  // api Pallet Service
     this._palletService.getPalletCode()
     .pipe()
     .subscribe(palletcode => {
       this.palletCode = palletcode.data;
-      console.log(this.palletCode);
     });
-    // content header
+
+  // content header
     this.contentHeader = {
       headerTitle: 'Form Validation',
       actionButton: true,
@@ -113,21 +155,40 @@ export class InputDataComponent implements OnInit {
     // Reactive form initialization
     this.ReactiveUserDetailsForm = this.formBuilder.group(
       {
-        userName: ['', Validators.required],
-        firstName: ['', Validators.required],
-        lastName: ['', Validators.required],
-        email: ['', [Validators.required, Validators.email]],
-        password: ['', [Validators.required, Validators.minLength(6)]],
-        confPassword: ['', [Validators.required, Validators.minLength(6)]],
-        country: ['', [Validators.required]],
-        language: ['', [Validators.required]],
-        age: ['', [Validators.required]],
-        phoneNumber: ['', [Validators.required]]
-      },
-      {
-        validator: MustMatch('password', 'confPassword')
+        rejectpallet: ['false'],
+        palletnumber: ['', Validators.required],
+        palletquantity: ['', Validators.required],
+        grade: ['', Validators.required],
+        jobnumber: ['', Validators.required],
+        jobname: ['', Validators.required],
+        jobquantity: ['', Validators.required],
+        fnumber: ['', Validators.required],
+        delta: ['', Validators.required],
+        checker: ['', Validators.required],
+        remark: [''],
+
+        date: ['', Validators.required],
+        waste: ['', Validators.required],
+        batch: ['', Validators.required],
+        black: ['', Validators.required],
+        inspectquantity: ['', Validators.required],
+        color: ['', Validators.required],
+        acceptedquantity: ['', Validators.required],
+        white: ['', Validators.required],
+        rejectedquantity: ['', Validators.required],
+        measure: ['', Validators.required],
+        pickout: [''],
+        markerror: ['', Validators.required],
       }
+      // ,
+      // {
+      //   validator: MustMatch('password', 'confPassword')
+      // }
     );
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    console.log(changes)
   }
 
 }
