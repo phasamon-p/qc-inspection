@@ -105,7 +105,7 @@ export class InputDataComponent implements OnInit {
     this.date = new Date();
     this.ngbDateStruct = { day: this.date.getUTCDate(), month: this.date.getUTCMonth() + 1, year: this.date.getUTCFullYear()};
   }
-
+  
   cancelClick(){
     // console.log("Cancel Click");
     this.ReactiveUserDetailsForm.reset();
