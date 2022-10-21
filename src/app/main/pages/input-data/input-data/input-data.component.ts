@@ -4,6 +4,8 @@ import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms
 import * as snippet from 'app/main/forms/form-validation/form-validation.snippetcode';
 
 import { PalletService } from 'app/auth/service';
+import { TestBed } from '@angular/core/testing';
+import { stringify } from 'querystring';
 
 @Component({
   selector: 'app-input-data',
@@ -19,37 +21,40 @@ export class InputDataComponent implements OnInit {
   public ReactiveUDFormSubmitted = false;
 
   public palletCode: Array<any>;
+  public fNumber: Array<any>;
+  public batchList: Array<any>;
   // valiables about date
   public date;
   public ngbDateStruct;
+  public events: string[] = [];
 
   // Reactive User Details form data
-  public UDForm = {
-    rejectpallet: '',
-    palletnumber: '',
-    palletquantity: '',
-    grade: '',
-    jobnumber: '',
-    jobname: '',
-    jobquantity: '',
-    fnumber: '',
-    delta: '',
-    checker: '',
-    remark: '',
+  // public UDForm = {
+  //   rejectpallet: '',
+  //   palletnumber: '',
+  //   palletquantity: '',
+  //   grade: '',
+  //   jobnumber: '',
+  //   jobname: '',
+  //   jobquantity: '',
+  //   fnumber: '',
+  //   delta: '',
+  //   checker: '',
+  //   remark: '',
 
-    date: '',
-    waste: '',
-    batch: '',
-    black: '',
-    inspectquantity: '',
-    color: '',
-    acceptedquantity: '',
-    white: '',
-    rejectedquantity: '',
-    measure: '',
-    pickout: '',
-    markerror: ''
-  };
+  //   date: '',
+  //   waste: '',
+  //   batch: '',
+  //   black: '',
+  //   inspectquantity: '',
+  //   color: '',
+  //   acceptedquantity: '',
+  //   white: '',
+  //   rejectedquantity: '',
+  //   measure: '',
+  //   pickout: '',
+  //   markerror: ''
+  // };
   /**
   *
   * @param {HttpClient} _http
@@ -74,9 +79,18 @@ export class InputDataComponent implements OnInit {
     }
     console.log(this.ReactiveUserDetailsForm.value);
     alert('SUCCESS!! :-)\n\n' + JSON.stringify(this.ReactiveUserDetailsForm.value));
+
+    let queryParams = this.setData_Add();
+    console.log(queryParams);
+    this._palletService.addPL(queryParams)
+      .pipe()
+      .subscribe(Response => {
+        let data = Response;
+        console.log("responce : " + data);
+      },error => console.log(error));
   }
 
-  changeRejectPallet(e) {
+public changeRejectPallet(e) {
     if (this.ReactiveUserDetailsForm.value.rejectpallet == 'true') {
       // enabled
       document.getElementById('UDPalletNumber').setAttribute("disabled", "true");
@@ -101,17 +115,110 @@ export class InputDataComponent implements OnInit {
     }
   }
 
-  dateToday(){
+  public dateToday(){
     this.date = new Date();
     this.ngbDateStruct = { day: this.date.getUTCDate(), month: this.date.getUTCMonth() + 1, year: this.date.getUTCFullYear()};
+    this.ReactiveUserDetailsForm.controls['date'].setValue(this.ngbDateStruct);
   }
-  
-  cancelClick(){
-    // console.log("Cancel Click");
+
+  public dateFormat(){
+    return this.ReactiveUserDetailsForm.value.date.year + "-" + this.ReactiveUserDetailsForm.value.date.month + "-" + this.ReactiveUserDetailsForm.value.date.day;
+  }
+
+  public changDate(){
+    let data = this.dateFormat();
+    this._palletService.getBatch(this.dateFormat())
+      .pipe()
+      .subscribe(Response => {
+        let data = Response.data;
+        // Set Value
+        this.batchList = data;
+      });
+  }
+
+  public changBatch(){
+    let data = this.dateFormat();
+    let batch = this.ReactiveUserDetailsForm.value.batch;
+    this._palletService.getBatchDetail(data, batch)
+      .pipe()
+      .subscribe(Response => {
+        let data = Response.data;
+        console.log("response : " + JSON.stringify(data));
+         // Set Value
+         this.ReactiveUserDetailsForm.controls['waste'].setValue(data.waste);
+         this.ReactiveUserDetailsForm.controls['black'].setValue(data.black);
+         this.ReactiveUserDetailsForm.controls['inspectquantity'].setValue(data.total);
+         this.ReactiveUserDetailsForm.controls['color'].setValue(data.color);
+         this.ReactiveUserDetailsForm.controls['acceptedquantity'].setValue(data.good);
+         this.ReactiveUserDetailsForm.controls['white'].setValue(data.white);
+         this.ReactiveUserDetailsForm.controls['rejectedquantity'].setValue(data.bad);
+         this.ReactiveUserDetailsForm.controls['measure'].setValue(data.measure);
+         this.ReactiveUserDetailsForm.controls['markerror'].setValue(data.markError);
+      },error => console.log(error));
+  }
+
+  public setData_Add(){
+    var x = this.ReactiveUserDetailsForm.value.jobquantity;
+    let jobQty = x.toString();
+
+    let queryParams = JSON.stringify({
+      "reject_Pallet": "no",
+      "pallet_no": this.ReactiveUserDetailsForm.value.palletnumber,
+      "pallet_Qty": this.ReactiveUserDetailsForm.value.palletquantity,
+      "grade": this.ReactiveUserDetailsForm.value.grade,
+      "job_no": this.ReactiveUserDetailsForm.value.jobnumber,
+      "job_name": this.ReactiveUserDetailsForm.value.jobname,
+      "job_Qty": jobQty,
+      "f_Number": this.ReactiveUserDetailsForm.value.fnumber,
+      "delta": this.ReactiveUserDetailsForm.value.delta,
+      "checkker_name": this.ReactiveUserDetailsForm.value.checker,
+      "remark_txt": this.ReactiveUserDetailsForm.value.remark,
+      "date_stm": this.dateFormat(),
+      "batch_no": this.ReactiveUserDetailsForm.value.batch,
+      "inspect_Qty": this.ReactiveUserDetailsForm.value.inspectquantity,
+      "appcept_Qty": this.ReactiveUserDetailsForm.value.acceptedquantity,
+      "reject_Qty": this.ReactiveUserDetailsForm.value.rejectedquantity,
+      "pick_Out": this.ReactiveUserDetailsForm.value.pickout,
+      "wasted_": this.ReactiveUserDetailsForm.value.waste,
+      "black_": this.ReactiveUserDetailsForm.value.black,
+      "colors_": this.ReactiveUserDetailsForm.value.color,
+      "white_": this.ReactiveUserDetailsForm.value.white,
+      "measure_": this.ReactiveUserDetailsForm.value.measure,
+      "mark_err": this.ReactiveUserDetailsForm.value.markerror});
+      return queryParams;
+  }
+
+
+
+  addEvent(type: string, event) {
+    this.events.push(`${type}: ${event.value}`);
+    console.log(this.events);
+  }
+
+  public cancelClick(){
+    // console.log(this.ReactiveUserDetailsForm.value.date);
     this.ReactiveUserDetailsForm.reset();
     this.ReactiveUserDetailsForm.controls['rejectpallet'].setValue('false');
     this.ReactiveUserDetailsForm.controls['grade'].setValue('A');
     this.ReactiveUserDetailsForm.controls['date'].setValue(this.ngbDateStruct);
+  }
+
+  public changPalletNumber(){
+    // api Pallet detail
+    this._palletService.getPalletDetail(this.ReactiveUserDetailsForm.value.palletnumber)
+      .pipe()
+      .subscribe(Response => {
+        let data = Response.data[0];
+        // this.palletCode = palletcode.data;
+        // Set Value
+        this.ReactiveUserDetailsForm.controls['palletquantity'].setValue(data.qty);
+        this.ReactiveUserDetailsForm.controls['jobnumber'].setValue(data.job_id);
+        this.ReactiveUserDetailsForm.controls['jobname'].setValue(data.job_name);
+        this.ReactiveUserDetailsForm.controls['jobquantity'].setValue(data.qty);
+        this.ReactiveUserDetailsForm.controls['fnumber'].setValue(data.part_name[0]);
+        this.ReactiveUserDetailsForm.controls['palletquantity'].setValue(data.qty1);
+        this.fNumber = data.part_name;
+      });
   }
 
   // Lifecycle Hooks
@@ -121,8 +228,7 @@ export class InputDataComponent implements OnInit {
    * On init
    */
   ngOnInit() {
-    // declare date today
-    this.dateToday();
+    
     // Reactive form initialization
     this.ReactiveUserDetailsForm = this.formBuilder.group(
       {
@@ -152,6 +258,9 @@ export class InputDataComponent implements OnInit {
         markerror: ['', Validators.required],
       }
     );
+    // declare date today
+    this.dateToday();
+    this.changDate();
     // set value to formcontrol
     this.ReactiveUserDetailsForm.controls['grade'].setValue('A');
     this.ReactiveUserDetailsForm.controls['date'].setValue(this.ngbDateStruct);

@@ -28,7 +28,8 @@
                                 <div class="form-group">
                                     <label for="UDPalletNumber">Pallet Number</label>
                                     <select id="UDPalletNumber" formControlName="palletnumber" class="form-control"
-                                        [ngClass]="{ 'is-invalid': ReactiveUDFormSubmitted && ReactiveUDForm.palletnumber.errors }">
+                                        [ngClass]="{ 'is-invalid': ReactiveUDFormSubmitted && ReactiveUDForm.palletnumber.errors }"
+                                        (change)="changPalletNumber()">
                                         <option *ngFor="let pallet of palletCode" [value]="pallet">{{pallet}}
                                         </option>
                                     </select>
@@ -116,10 +117,8 @@
                                     <label for="UDFNumber">F Number</label>
                                     <select id="UDFNumber" formControlName="fnumber" class="form-control"
                                         [ngClass]="{ 'is-invalid': ReactiveUDFormSubmitted && ReactiveUDForm.fnumber.errors }">
-                                        <option value="USA">USA</option>
-                                        <option value="Germany">Germany</option>
-                                        <option value="Russia">Russia</option>
-                                        <option value="UK">UK</option>
+                                        <option *ngFor="let fNumber of fNumber" [value]="fNumber">{{fNumber}}
+                                        </option>
                                     </select>
                                     <div *ngIf="ReactiveUDFormSubmitted && ReactiveUDForm.fnumber.errors"
                                         class="invalid-feedback">
@@ -176,10 +175,12 @@
                                     <div class="input-group">
                                         <input class="form-control" placeholder="yyyy-mm-dd" name="Basic Date Picker"
                                             formControlName="date" ngbDatepicker #basicDP="ngbDatepicker"
-                                            [ngClass]="{ 'is-invalid': ReactiveUDFormSubmitted && ReactiveUDForm.date.errors }"/>
+                                            [ngClass]="{ 'is-invalid': ReactiveUDFormSubmitted && ReactiveUDForm.date.errors }"
+                                            (dateChange)="addEvent('change', $event)"
+                                            />
                                         <div class="input-group-append">
                                             <button class="btn btn-outline-secondary feather icon-calendar"
-                                                (click)="basicDP.toggle()" type="button" rippleEffect></button>
+                                                (click)="basicDP.toggle();" type="button" rippleEffect></button>
                                         </div>
                                         <div *ngIf="ReactiveUDFormSubmitted && ReactiveUDForm.date.errors"
                                             class="invalid-feedback">
@@ -205,11 +206,14 @@
                                 <div class="form-group">
                                     <label for="UDBatch">Batch</label>
                                     <select id="UDBatch" formControlName="batch" class="form-control"
-                                        [ngClass]="{ 'is-invalid': ReactiveUDFormSubmitted && ReactiveUDForm.batch.errors }">
-                                        <option value="USA">USA</option>
+                                        [ngClass]="{ 'is-invalid': ReactiveUDFormSubmitted && ReactiveUDForm.batch.errors }"
+                                        (change)="changBatch()">
+                                        <option *ngFor="let batch of batchList" [value]="batch">{{batch}}
+                                        </option>
+                                        <!-- <option value="USA">USA</option>
                                         <option value="Germany">Germany</option>
                                         <option value="Russia">Russia</option>
-                                        <option value="UK">UK</option>
+                                        <option value="UK">UK</option> -->
                                     </select>
                                     <div *ngIf="ReactiveUDFormSubmitted && ReactiveUDForm.batch.errors"
                                         class="invalid-feedback">
