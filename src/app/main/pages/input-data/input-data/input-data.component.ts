@@ -2,7 +2,7 @@ import { Component, OnInit, SimpleChanges } from '@angular/core';
 import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 
 import * as snippet from 'app/main/forms/form-validation/form-validation.snippetcode';
-
+import { Inject } from '@angular/core';
 import { PalletService } from 'app/auth/service';
 import { TestBed } from '@angular/core/testing';
 import { stringify } from 'querystring';
@@ -58,12 +58,12 @@ export class InputDataComponent implements OnInit {
   /**
   *
   * @param {HttpClient} _http
-  * @param {PalletService} _palletService
+  * @param {PalletService} palletService
   */
 
   constructor(
     private formBuilder: UntypedFormBuilder, 
-    private _palletService: PalletService) { }
+    private palletService: PalletService) { }
 
   // getter for easy access to form fields
   get ReactiveUDForm() {
@@ -82,7 +82,7 @@ export class InputDataComponent implements OnInit {
 
     let queryParams = this.setData_Add();
     console.log(queryParams);
-    this._palletService.addPL(queryParams)
+    this.palletService.addPL(queryParams)
       .pipe()
       .subscribe(Response => {
         let data = Response;
@@ -127,19 +127,20 @@ public changeRejectPallet(e) {
 
   public changDate(){
     let data = this.dateFormat();
-    this._palletService.getBatch(this.dateFormat())
+    this.palletService.getBatch(this.dateFormat())
       .pipe()
       .subscribe(Response => {
         let data = Response.data;
         // Set Value
         this.batchList = data;
-      });
+        console.log(Response.msg)
+      },error => console.log(error));
   }
 
   public changBatch(){
     let data = this.dateFormat();
     let batch = this.ReactiveUserDetailsForm.value.batch;
-    this._palletService.getBatchDetail(data, batch)
+    this.palletService.getBatchDetail(data, batch)
       .pipe()
       .subscribe(Response => {
         let data = Response.data;
@@ -205,7 +206,7 @@ public changeRejectPallet(e) {
 
   public changPalletNumber(){
     // api Pallet detail
-    this._palletService.getPalletDetail(this.ReactiveUserDetailsForm.value.palletnumber)
+    this.palletService.getPalletDetail(this.ReactiveUserDetailsForm.value.palletnumber)
       .pipe()
       .subscribe(Response => {
         let data = Response.data[0];
@@ -266,10 +267,11 @@ public changeRejectPallet(e) {
     this.ReactiveUserDetailsForm.controls['date'].setValue(this.ngbDateStruct);
 
     // api Pallet Service
-    this._palletService.getPalletCode()
+    this.palletService.getPalletCode()
       .pipe()
       .subscribe(palletcode => {
         this.palletCode = palletcode.data;
+        console.log(this.palletCode);
       });
 
     // content header

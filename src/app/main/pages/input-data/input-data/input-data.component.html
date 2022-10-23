@@ -32,6 +32,7 @@
                                         (change)="changPalletNumber()">
                                         <option *ngFor="let pallet of palletCode" [value]="pallet">{{pallet}}
                                         </option>
+                                        <option *ngIf="ReactiveUserDetailsForm.value.rejectpallet =='true'" value="Reject Pallet" disabled selected>Reject Pallet</option>
                                     </select>
                                     <div *ngIf="ReactiveUDFormSubmitted && ReactiveUDForm.palletnumber.errors"
                                         class="invalid-feedback">
@@ -176,7 +177,7 @@
                                         <input class="form-control" placeholder="yyyy-mm-dd" name="Basic Date Picker"
                                             formControlName="date" ngbDatepicker #basicDP="ngbDatepicker"
                                             [ngClass]="{ 'is-invalid': ReactiveUDFormSubmitted && ReactiveUDForm.date.errors }"
-                                            (dateChange)="addEvent('change', $event)"
+                                            (dataChange)="addEvent('change', $event)"
                                             />
                                         <div class="input-group-append">
                                             <button class="btn btn-outline-secondary feather icon-calendar"
