@@ -1,4 +1,4 @@
-<section id="multiple-validation">
+<section id="multiple-validation" class ="basic-select">
     <div class="row">
         <!-- Import Pallet -->
         <div class="col-md-6">
@@ -12,13 +12,13 @@
                                     <label for="UDRejectPallet" class="d-block mb-1">Reject Pallet</label>
                                     <div class="custom-control custom-radio custom-control-inline">
                                         <input type="radio" id="yes" value="true" name="rejectpallet"
-                                            class="custom-control-input" (change)="changeRejectPallet($event)"
+                                            class="custom-control-input" (change)="changeRejectPallet()"
                                             formControlName="rejectpallet" />
                                         <label class="custom-control-label" for="yes">Yes</label>
                                     </div>
                                     <div class="custom-control custom-radio custom-control-inline">
                                         <input type="radio" id="no" value="false" name="rejectpallet"
-                                            class="custom-control-input" (change)="changeRejectPallet($event)"
+                                            class="custom-control-input" (change)="changeRejectPallet()"
                                             formControlName="rejectpallet" />
                                         <label class="custom-control-label" for="no">No</label>
                                     </div>
@@ -26,20 +26,10 @@
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="UDPalletNumber">Pallet Number</label>
-                                    <select id="UDPalletNumber" formControlName="palletnumber" class="form-control"
-                                        [ngClass]="{ 'is-invalid': ReactiveUDFormSubmitted && ReactiveUDForm.palletnumber.errors }"
-                                        (change)="changPalletNumber()">
-                                        <option *ngFor="let pallet of palletCode" [value]="pallet">{{pallet}}
-                                        </option>
-                                        <option *ngIf="ReactiveUserDetailsForm.value.rejectpallet =='true'" value="Reject Pallet" disabled selected>Reject Pallet</option>
-                                    </select>
-                                    <div *ngIf="ReactiveUDFormSubmitted && ReactiveUDForm.palletnumber.errors"
-                                        class="invalid-feedback">
-                                        <div *ngIf="ReactiveUDForm.palletnumber.errors.required">Pallet Number
-                                            is required
-                                        </div>
-                                    </div>
+                                    <label for="UDPalletNumber">Pallet Number</label>     
+                                    <ng-select [items]="palletCode" formControlName="palletnumber"
+                                     bindLabel="name" [loading]="selectPalletLoading"
+                                     (change)="changPalletNumber()"> </ng-select>             
                                 </div>
                             </div>
                             <div class="col-md-12">
@@ -59,8 +49,7 @@
                                 <div class="form-group">
                                     <label for="UDGrade">Grade</label>
                                     <select id="UDGrade" formControlName="grade" class="form-control"
-                                        [ngClass]="{ 'is-invalid': ReactiveUDFormSubmitted && ReactiveUDForm.grade.errors }"
-                                        disabled>
+                                        [ngClass]="{ 'is-invalid': ReactiveUDFormSubmitted && ReactiveUDForm.grade.errors }">
                                         <option value="A">A</option>
                                         <option value="B">B</option>
                                         <option value="C">C</option>
@@ -174,10 +163,11 @@
                                 <div class="form-group">
                                     <label for="UDDate">Date</label>
                                     <div class="input-group">
+                                        <!-- <ng2-flatpickr [config]="basicDateOptions" name="basicDate"></ng2-flatpickr> -->
                                         <input class="form-control" placeholder="yyyy-mm-dd" name="Basic Date Picker"
                                             formControlName="date" ngbDatepicker #basicDP="ngbDatepicker"
                                             [ngClass]="{ 'is-invalid': ReactiveUDFormSubmitted && ReactiveUDForm.date.errors }"
-                                            (dataChange)="addEvent('change', $event)"
+                                            (dateSelect)="changDate()"
                                             />
                                         <div class="input-group-append">
                                             <button class="btn btn-outline-secondary feather icon-calendar"
@@ -187,7 +177,7 @@
                                             class="invalid-feedback">
                                             <div *ngIf="ReactiveUDForm.date.errors.required">Date is
                                                 required</div>
-                                        </div>
+                                        </div>                                     
                                     </div>
                                 </div>
                             </div>

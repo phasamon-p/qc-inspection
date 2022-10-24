@@ -23,7 +23,8 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     resolve: {
       // profile: ProfileService
-    }
+    },
+    data: { animation: 'select' }
   }
 ];
 
