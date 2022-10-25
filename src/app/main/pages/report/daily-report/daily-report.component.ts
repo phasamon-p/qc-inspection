@@ -1,11 +1,10 @@
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ColumnMode, DatatableComponent } from '@swimlane/ngx-datatable';
-
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-
 import { CoreConfigService } from '@core/services/config.service';
 import { CoreSidebarService } from '@core/components/core-sidebar/core-sidebar.service';
+import { ReportService } from 'app/auth/service';
 
 import { DailyReportService } from 'app/main/pages/report/daily-report/daily-report.service';
 
@@ -76,11 +75,13 @@ export class DailyReportComponent implements OnInit {
    * @param {CoreConfigService} _coreConfigService
    * @param {DailyReportService} _dailyReportService
    * @param {CoreSidebarService} _coreSidebarService
+   * @param {ReportService} _reportService
    */
   constructor(
     private _dailyReportService: DailyReportService,
     private _coreSidebarService: CoreSidebarService,
-    private _coreConfigService: CoreConfigService
+    private _coreConfigService: CoreConfigService,
+    private _reportService:ReportService
   ) {
     this._unsubscribeAll = new Subject();
   }
@@ -208,6 +209,14 @@ export class DailyReportComponent implements OnInit {
    * On init
    */
   ngOnInit(): void {
+
+    this._reportService.getReportDaily('2022-10-21T06:21:38.736Z','2022-10-21T06:21:38.736Z')
+      .pipe()
+      .subscribe(Response => {
+        let data = Response.data.data;
+        console.log("responce : " + JSON.stringify(data[0].date));
+      }, error => console.log(error));
+
     // Subscribe config change
     this._coreConfigService.config.pipe(takeUntil(this._unsubscribeAll)).subscribe(config => {
       //! If we have zoomIn route Transition then load datatable after 450ms(Transition will finish in 400ms)

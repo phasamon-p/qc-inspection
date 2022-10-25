@@ -92,25 +92,27 @@ export class InputDataComponent implements OnInit {
   public changeRejectPallet() {
     if (this.ReactiveUserDetailsForm.value.rejectpallet == 'true') {
       // enabled
-      document.getElementById('UDPalletNumber').setAttribute("disabled", "true");
+      // document.getElementById('UDPalletNumber').setAttribute("disabled", "true");
       document.getElementById('UDPalletQuantity').setAttribute("disabled", "true");
       // disabled
       document.getElementById('UDGrade').removeAttribute("disabled");
       // set value
+      this.ReactiveUserDetailsForm.controls['palletnumber'].disable();
+
       this.ReactiveUserDetailsForm.controls['palletnumber'].setValue('Reject Pallet');
       this.ReactiveUserDetailsForm.controls['palletquantity'].setValue('0');
-      this.ReactiveUserDetailsForm.controls['grade'].setValue('');
+      this.ReactiveUserDetailsForm.controls['grade'].reset();
     }
     else {
       // disabled
       document.getElementById('UDGrade').setAttribute("disabled", "true");
       // enabled
-      document.getElementById('UDPalletNumber').removeAttribute("disabled");
+      // document.getElementById('UDPalletNumber').removeAttribute("disabled");
       document.getElementById('UDPalletQuantity').removeAttribute("disabled");
       // set value
       this.ReactiveUserDetailsForm.controls['grade'].setValue('A');
-      this.ReactiveUserDetailsForm.controls['palletnumber'].setValue('');
-      this.ReactiveUserDetailsForm.controls['palletquantity'].setValue('');
+      this.ReactiveUserDetailsForm.controls['palletnumber'].reset();
+      this.ReactiveUserDetailsForm.controls['palletquantity'].reset();
     }
   }
 
@@ -132,7 +134,7 @@ export class InputDataComponent implements OnInit {
         let data = Response.data;
         // Set Value
         this.batchList = data;
-        console.log(data)
+        // console.log(data)
       }, error => console.log(error));
   }
 
