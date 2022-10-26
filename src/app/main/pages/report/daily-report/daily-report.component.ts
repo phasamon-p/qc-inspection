@@ -6,8 +6,6 @@ import { CoreConfigService } from '@core/services/config.service';
 import { CoreSidebarService } from '@core/components/core-sidebar/core-sidebar.service';
 import { ReportService } from 'app/auth/service';
 
-import { DailyReportService } from 'app/main/pages/report/daily-report/daily-report.service';
-
 @Component({
   selector: 'app-daily-report',
   templateUrl: './daily-report.component.html',
@@ -26,13 +24,16 @@ export class DailyReportComponent implements OnInit {
   public previousStatusFilter = '';
   public exportCSVData;
 
+  public dailyData;
+
   public selectFNumber: any = [
     { name: 'All', value: '' },
     { name: 'F010001', value: 'F010001' },
     { name: 'F010002', value: 'F010002' },
     { name: 'F010003', value: 'F010003' },
     { name: 'F010004', value: 'F010004' },
-    { name: 'F010005', value: 'F010005' }
+    { name: 'F010005', value: 'F010005' },
+    { name: 'Box', value: 'Box' }
   ];
 
   public selectGrade: any = [
@@ -72,15 +73,9 @@ export class DailyReportComponent implements OnInit {
   /**
    * Constructor
    *
-   * @param {CoreConfigService} _coreConfigService
-   * @param {DailyReportService} _dailyReportService
-   * @param {CoreSidebarService} _coreSidebarService
    * @param {ReportService} _reportService
    */
   constructor(
-    private _dailyReportService: DailyReportService,
-    private _coreSidebarService: CoreSidebarService,
-    private _coreConfigService: CoreConfigService,
     private _reportService:ReportService
   ) {
     this._unsubscribeAll = new Subject();
@@ -104,14 +99,14 @@ export class DailyReportComponent implements OnInit {
 
     // Filter Our Data
     const temp = this.tempData.filter(function (d) {
-      return (d.jobname.toLowerCase().indexOf(val) !== -1 || !val) ||
-      (d.batch.toLowerCase().indexOf(val) !== -1 || !val) ||
-      (d.palletnumber.toLowerCase().indexOf(val) !== -1 || !val) ||
-      (d.remark.toLowerCase().indexOf(val) !== -1 || !val);
+      return (d.job_name.toLowerCase().indexOf(val) !== -1 || !val) ||
+      (d.batch_no.toLowerCase().indexOf(val) !== -1 || !val) ||
+      (d.pallet_no.toLowerCase().indexOf(val) !== -1 || !val) ||
+      (d.remark_txt.toLowerCase().indexOf(val) !== -1 || !val);
     });
 
     // Update The Rows
-    this.rows = temp;
+    this.dailyData = temp;
     // Whenever The Filter Changes, Always Go Back To The First Page
     this.table.offset = 0;
   }
@@ -131,11 +126,11 @@ export class DailyReportComponent implements OnInit {
 
     // Filter Our Data
     const temp = this.tempData.filter(function (d) {
-      return (d.jobid.toLowerCase().indexOf(val) !== -1 || !val);
+      return (d.job_no.toLowerCase().indexOf(val) !== -1 || !val);
     });
 
     // Update The Rows
-    this.rows = temp;
+    this.dailyData = temp;
     // Whenever The Filter Changes, Always Go Back To The First Page
     this.table.offset = 0;
   }
@@ -149,8 +144,7 @@ export class DailyReportComponent implements OnInit {
     const filter = event ? event.value : '';
     this.previousRoleFilter = filter;
     this.temp = this.filterRows(filter, this.previousPlanFilter, this.previousStatusFilter);
-    this.rows = this.temp;
-    console.log(event)
+    this.dailyData = this.temp;
   }
 
   /**
@@ -162,7 +156,7 @@ export class DailyReportComponent implements OnInit {
     const filter = event ? event.value : '';
     this.previousPlanFilter = filter;
     this.temp = this.filterRows(this.previousRoleFilter, filter, this.previousStatusFilter);
-    this.rows = this.temp;
+    this.dailyData = this.temp;
   }
 
   /**
@@ -174,7 +168,7 @@ export class DailyReportComponent implements OnInit {
     const filter = event ? event.value : '';
     this.previousStatusFilter = filter;
     this.temp = this.filterRows(this.previousRoleFilter, this.previousPlanFilter, filter);
-    this.rows = this.temp;
+    this.dailyData = this.temp;
   }
 
   /**
@@ -196,9 +190,9 @@ export class DailyReportComponent implements OnInit {
     checkerFilter = checkerFilter.toLowerCase();
 
     return this.tempData.filter(row => {
-      const isPartialFumberMatch = row.fnumber.toLowerCase().indexOf(fNumberFilter) !== -1 || !fNumberFilter;
+      const isPartialFumberMatch = row.f_Number.toLowerCase().indexOf(fNumberFilter) !== -1 || !fNumberFilter;
       const isPartialGradeMatch = row.grade.toLowerCase().indexOf(gradeFilter) !== -1 || !gradeFilter;
-      const isPartialCheckerMatch = row.checker.toLowerCase().indexOf(checkerFilter) !== -1 || !checkerFilter;
+      const isPartialCheckerMatch = row.checkker_name.toLowerCase().indexOf(checkerFilter) !== -1 || !checkerFilter;
       return isPartialFumberMatch && isPartialGradeMatch && isPartialCheckerMatch;
     });
   }
@@ -214,30 +208,12 @@ export class DailyReportComponent implements OnInit {
       .pipe()
       .subscribe(Response => {
         let data = Response.data.data;
-        console.log("responce : " + JSON.stringify(data[0].date));
+        this.dailyData = data;
+        this.tempData = this.dailyData;
+        this.exportCSVData = this.dailyData;
+        // console.log("responce : " + JSON.stringify(this.dailyData));
       }, error => console.log(error));
-
-    // Subscribe config change
-    this._coreConfigService.config.pipe(takeUntil(this._unsubscribeAll)).subscribe(config => {
-      //! If we have zoomIn route Transition then load datatable after 450ms(Transition will finish in 400ms)
-      if (config.layout.animation === 'zoomIn') {
-        setTimeout(() => {
-          this._dailyReportService.onReportListChanged.pipe(takeUntil(this._unsubscribeAll)).subscribe(response => {
-            this.rows = response;
-            this.tempData = this.rows;
-            this.exportCSVData = this.rows;
-          });
-        }, 450);
-      } else {
-        this._dailyReportService.onReportListChanged.pipe(takeUntil(this._unsubscribeAll)).subscribe(response => {
-          this.rows = response;
-          this.tempData = this.rows;
-          this.exportCSVData = this.rows;
-        });
-      }
-    });
   }
-
   /**
    * On destroy
    */

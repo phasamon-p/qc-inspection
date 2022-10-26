@@ -23,7 +23,6 @@ import { InvoiceModule } from 'app/main/apps/invoice/invoice.module';
 
 
 import { DailyReportComponent } from 'app/main/pages/report/daily-report/daily-report.component';
-import { DailyReportService } from 'app/main/pages/report/daily-report/daily-report.service';
 
 import { JobSummaryReportComponent } from 'app/main/pages/report/job-summary-report/job-summary-report.component';
 import { JobSummaryReportService } from 'app/main/pages/report/job-summary-report/job-summary-report.service';
@@ -36,9 +35,6 @@ const routes: Routes = [
     path: 'daily-report',
     component: DailyReportComponent,
     canActivate: [AuthGuard],
-    resolve: {
-      uls: DailyReportService
-    },
     data: { animation: 'DailyReportComponent' }
   },
   {
