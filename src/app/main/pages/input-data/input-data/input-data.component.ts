@@ -262,7 +262,6 @@ export class InputDataComponent implements OnInit {
       }
     );
     this.cancelClick();
-    document.getElementById('UDGrade').setAttribute("disabled", "true");
     // declare date today
     this.dateToday();
     this.changDate();

@@ -35,7 +35,7 @@ const routes: Routes = [
     path: 'daily-report',
     component: DailyReportComponent,
     canActivate: [AuthGuard],
-    data: { animation: 'DailyReportComponent' }
+    data: { animation: 'DailyReportComponent'}
   },
   {
     path: 'jobsummary-report',
