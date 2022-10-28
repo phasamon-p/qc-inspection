@@ -40,4 +40,17 @@ export class ReportService {
     };
     return this._http.post<any>(`${environment.serverApiUrl}/api/Report/GetJobSummaryReport`, queryParams, httpOptions);
   }
+
+  /**
+   * Get Report Daily
+   */
+   getMatchineReport(startDate : string, endDate : string): Observable<any>{
+    let queryParams = {"startDate" : startDate, "endDate" : endDate};
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type':  'application/json'
+      })
+    };
+    return this._http.post<any>(`${environment.serverApiUrl}/api/Report/GetReportFromMachine`, queryParams, httpOptions);
+  }
 }

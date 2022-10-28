@@ -48,6 +48,15 @@ export class PalletService {
   }
 
   /**
+   * Get Detail By Job Number
+   */
+  getJobNumberDetail(jobNumber : string): Observable<any>{
+    let queryParams = new HttpParams();
+    queryParams = queryParams.append("JobNo",jobNumber);
+    return this._http.get<any>(`${environment.serverApiUrl}/api/PL/getDetailJobNo`,{params:queryParams});
+  }
+
+  /**
    * Get Search Pallet Code
    */
    addPL(data : string): Observable<any>{

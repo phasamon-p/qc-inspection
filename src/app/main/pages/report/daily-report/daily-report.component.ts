@@ -74,7 +74,8 @@ export class DailyReportComponent implements OnInit {
    */
   constructor(private _reportService: ReportService, 
     private calendar: NgbCalendar, 
-    public formatter: NgbDateParserFormatter) {
+    public formatter: NgbDateParserFormatter
+  ) {
     this._unsubscribeAll = new Subject();
     this.fromDate = calendar.getToday();
     this.toDate = calendar.getToday();
@@ -151,7 +152,7 @@ export class DailyReportComponent implements OnInit {
   }
 
   /**
-   * filterUpdate
+   * Filter Search (Pallet Number)
    *
    * @param event
    */
@@ -172,13 +173,12 @@ export class DailyReportComponent implements OnInit {
   }
 
   /**
-   * filterUpdate
+   * Filter By Job Number
    *
    * @param event
    */
    filterByJobNumber(event) {
     const filter = event.target.value;
-    console.log(filter)
     this.previousJobNumberFilter = filter;
     this.temp = this.filterRows(
       filter,
@@ -187,7 +187,6 @@ export class DailyReportComponent implements OnInit {
       this.previousCheckerFilter,
       this.previousSerchFilter
     );
-    console.log("Job Number Filter : " + this.temp)
     // Update The Rows
     this.dailyData = this.temp;
     // Whenever The Filter Changes, Always Go Back To The First Page
@@ -206,9 +205,6 @@ export class DailyReportComponent implements OnInit {
     if(event.type == 'click') {
         console.log(event);
     }
-  }
-  onSelect({ selected }) {
-    console.log('Select Event', selected, this.selected);
   }
 
   /**
@@ -290,8 +286,9 @@ export class DailyReportComponent implements OnInit {
     gradeFilter = gradeFilter.toLowerCase();
     checkerFilter = checkerFilter.toLowerCase();
     searchFilter = searchFilter.toLowerCase();
-    console.log(jobNumberFilter)
+
     return this.tempData.filter((row) => {
+      console.log('row : ' + JSON.stringify(row))
       const isPartialJobNumberMatch =
         row.job_no.toLowerCase().indexOf(jobNumberFilter) !== -1 ||
         !jobNumberFilter;

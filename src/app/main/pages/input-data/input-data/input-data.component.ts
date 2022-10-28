@@ -9,6 +9,10 @@ import { Person, DataService } from 'app/main/forms/form-elements/select/data.se
 import { pallet_dropdown } from 'app/auth/models';
 import { Inject } from '@angular/core';
 import { PalletService } from 'app/auth/service';
+import { JobNumberService } from 'app/auth/service';
+import { User } from 'app/auth/models';
+import { AuthenticationService } from 'app/auth/service';
+import { Router } from '@angular/router';
 import { TestBed } from '@angular/core/testing';
 import { stringify } from 'querystring';
 
@@ -21,23 +25,30 @@ import { stringify } from 'querystring';
 export class InputDataComponent implements OnInit {
   // public
   public contentHeader: object;
-  public _snippetCodeReactiveForms = snippet.snippetCodeReactiveForms;
-
   public ReactiveUserDetailsForm: UntypedFormGroup;
   public ReactiveUDFormSubmitted = false;
-
+  
+  // Data Variable
   public palletCode: Array<any>;
+  public jobNumberSelect: Array<any>;
   public selectPalletLoading = false;
+  public selectjobNumberLoading = false;
   public fNumber: Array<any>;
   public batchList: Array<any>;
+
   // valiables about date
   public date;
   public ngbDateStruct;
   public events: string[] = [];
-
   public basicDPdata: NgbDateStruct;
 
+  public currentUser: User;
   public array: any = [];
+
+  public basicDateOptions: FlatpickrOptions = {
+    altInput: true
+  };
+
   // select basic
   
 
@@ -45,25 +56,24 @@ export class InputDataComponent implements OnInit {
   *
   * @param {HttpClient} _http
   * @param {PalletService} palletService
+  * @param {JobNumberService} jobNumberService
+  * @param {AuthenticationService} _authenticationService
+  * 
   */
 
   constructor(
     private formBuilder: UntypedFormBuilder,
-    private palletService: PalletService) { }
+    private palletService: PalletService,
+    private _authenticationService: AuthenticationService,
+    private jobNumberService: JobNumberService,
+    ) {
+      this._authenticationService.currentUser.subscribe(x => (this.currentUser = x));
+     }
 
   // getter for easy access to form fields
   get ReactiveUDForm() {
     return this.ReactiveUserDetailsForm.controls;
   }
-
-  filterByStatus(event) {
-    console.log(event);
-    // const filter = event ? event.value : '';
-    // this.previousStatusFilter = filter;
-    // this.tempFilterData = this.filterRows(filter);
-    // this.rows = this.tempFilterData;
-  }
-
 
   ReactiveUDFormOnSubmit() {
     this.ReactiveUDFormSubmitted = true;
@@ -85,30 +95,32 @@ export class InputDataComponent implements OnInit {
       }, error => console.log(error));
   }
 
-  public basicDateOptions: FlatpickrOptions = {
-    altInput: true
-  };
-
-  public changeRejectPallet() {
+  changeRejectPallet() {
     if (this.ReactiveUserDetailsForm.value.rejectpallet == 'true') {
+      this.cancelClick();
+      this.ReactiveUserDetailsForm.controls['rejectpallet'].setValue('true');
       // enabled
-      // document.getElementById('UDPalletNumber').setAttribute("disabled", "true");
       document.getElementById('UDPalletQuantity').setAttribute("disabled", "true");
+
       // disabled
       document.getElementById('UDGrade').removeAttribute("disabled");
+
       // set value
       this.ReactiveUserDetailsForm.controls['palletnumber'].disable();
-
       this.ReactiveUserDetailsForm.controls['palletnumber'].setValue('Reject Pallet');
       this.ReactiveUserDetailsForm.controls['palletquantity'].setValue('0');
       this.ReactiveUserDetailsForm.controls['grade'].reset();
     }
     else {
+      this.cancelClick();
+      this.ReactiveUserDetailsForm.controls['rejectpallet'].setValue('false');
       // disabled
       document.getElementById('UDGrade').setAttribute("disabled", "true");
+
       // enabled
-      // document.getElementById('UDPalletNumber').removeAttribute("disabled");
       document.getElementById('UDPalletQuantity').removeAttribute("disabled");
+      this.ReactiveUserDetailsForm.controls['palletnumber'].enable();
+
       // set value
       this.ReactiveUserDetailsForm.controls['grade'].setValue('A');
       this.ReactiveUserDetailsForm.controls['palletnumber'].reset();
@@ -116,17 +128,17 @@ export class InputDataComponent implements OnInit {
     }
   }
 
-  public dateToday() {
+  dateToday() {
     this.date = new Date();
     this.ngbDateStruct = { day: this.date.getUTCDate(), month: this.date.getUTCMonth() + 1, year: this.date.getUTCFullYear() };
     this.ReactiveUserDetailsForm.controls['date'].setValue(this.ngbDateStruct);
   }
 
-  public dateFormat() {
+  dateFormat() {
     return this.ReactiveUserDetailsForm.value.date.year + "-" + this.ReactiveUserDetailsForm.value.date.month + "-" + this.ReactiveUserDetailsForm.value.date.day;
   }
 
-  public changDate() {
+  changDate() {
     let data = this.dateFormat();
     this.palletService.getBatch(this.dateFormat())
       .pipe()
@@ -138,7 +150,7 @@ export class InputDataComponent implements OnInit {
       }, error => console.log(error));
   }
 
-  public changBatch() {
+  changBatch() {
     let data = this.dateFormat();
     let batch = this.ReactiveUserDetailsForm.value.batch;
     this.palletService.getBatchDetail(data, batch)
@@ -159,7 +171,7 @@ export class InputDataComponent implements OnInit {
       }, error => console.log(error));
   }
 
-  public setData_Add() {
+  setData_Add() {
     var x = this.ReactiveUserDetailsForm.value.jobquantity;
     let jobQty = x.toString();
 
@@ -191,24 +203,15 @@ export class InputDataComponent implements OnInit {
     return queryParams;
   }
 
-  public rows;
-  public tempFilterData;
-  public previousStatusFilter = '';
-
-  addEvent(type: string, event) {
-    this.events.push(`${type}: ${event.value}`);
-    console.log(this.events);
-  }
-
-  public cancelClick() {
+  cancelClick() {
     // console.log(this.ReactiveUserDetailsForm.value.date);
     this.ReactiveUserDetailsForm.reset();
     this.ReactiveUserDetailsForm.controls['rejectpallet'].setValue('false');
     this.ReactiveUserDetailsForm.controls['grade'].setValue('A');
-    this.ReactiveUserDetailsForm.controls['date'].setValue(this.ngbDateStruct);
+    this.ReactiveUserDetailsForm.controls['date'].setValue(this.ngbDateStruct)
   }
 
-  public changPalletNumber() {
+  changPalletNumber() {
     // api Pallet detail
     this.palletService.getPalletDetail(this.ReactiveUserDetailsForm.value.palletnumber.name)
       .pipe()
@@ -222,7 +225,66 @@ export class InputDataComponent implements OnInit {
         this.ReactiveUserDetailsForm.controls['fnumber'].setValue(data.part_name[0]);
         this.ReactiveUserDetailsForm.controls['palletquantity'].setValue(data.qty1);
         this.fNumber = data.part_name;
+        this.ReactiveUserDetailsForm.controls['checker'].setValue(this.currentUser.firstName + ' ' +  this.currentUser.lastName );
       });
+  }
+
+  changJobNumber(){
+    console.log(this.ReactiveUserDetailsForm.value.jobnumber.name);
+    this.palletService.getJobNumberDetail(this.ReactiveUserDetailsForm.value.jobnumber.name)
+      .pipe()
+      .subscribe(Response => {
+        let data = Response.data;
+        console.log("response : " + JSON.stringify(data));
+        // Set Value
+        this.ReactiveUserDetailsForm.controls['jobname'].setValue(data.job_name);
+        this.ReactiveUserDetailsForm.controls['jobquantity'].setValue(data.qty1);
+        this.fNumber = data.part_name;
+        this.ReactiveUserDetailsForm.controls['checker'].setValue(this.currentUser.firstName + ' ' +  this.currentUser.lastName );
+        console.log(this.ReactiveUserDetailsForm.value);
+      }, error => console.log(error));
+  }
+
+  /**
+   * 
+   *  Call Api getJobNumber
+   *
+   */
+  getJobNumber(){
+    // api Pallet Service
+    this.selectjobNumberLoading = true;
+    this.jobNumberService.getJobNumber()
+      .pipe()
+      .subscribe(responce => {
+        let array = [];
+        for (let key in responce.data) {
+          let p = { name: responce.data[key] }
+          array.push(p);
+        }
+        this.jobNumberSelect = array;
+      });
+    this.selectjobNumberLoading = false;
+  }
+
+  /**
+   * 
+   *  Call Api getPalletCode
+   *
+   */
+  getPalletNumber(){
+    // Api Get Pallet Number
+    this.selectPalletLoading = true;
+    this.palletService.getPalletCode()
+      .pipe()
+      .subscribe(palletcode => {
+        let array = [];
+        for (let key in palletcode.data) {
+          let p = { name: palletcode.data[key] }
+          array.push(p);
+        }
+        this.palletCode = array;
+      });
+    this.selectPalletLoading = false;
   }
 
   // Lifecycle Hooks
@@ -262,26 +324,21 @@ export class InputDataComponent implements OnInit {
       }
     );
     this.cancelClick();
+    this.changeRejectPallet();
     // declare date today
     this.dateToday();
     this.changDate();
+
+    // Api Get Pallet Number
+    this.getPalletNumber();
+
+    // Api Get Job Number
+    this.getJobNumber();
+  
     // set value to formcontrol
     this.ReactiveUserDetailsForm.controls['grade'].setValue('A');
     this.ReactiveUserDetailsForm.controls['date'].setValue(this.ngbDateStruct);
 
-    // api Pallet Service
-    this.selectPalletLoading = true;
-    this.palletService.getPalletCode()
-      .pipe()
-      .subscribe(palletcode => {
-        let array = [];
-        for (let key in palletcode.data) {
-          let p = { name: palletcode.data[key] }
-          array.push(p);
-        }
-        this.palletCode = array;
-      });
-    this.selectPalletLoading = false;
     // content header
     this.contentHeader = {
       headerTitle: 'Form Validation',
