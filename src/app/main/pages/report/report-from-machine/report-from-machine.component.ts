@@ -6,7 +6,9 @@ import { takeUntil } from 'rxjs/operators';
 
 import { CoreConfigService } from '@core/services/config.service';
 import { CoreSidebarService } from '@core/components/core-sidebar/core-sidebar.service';
-
+import { ReportService } from "app/auth/service";
+import { NgbDateStruct, NgbCalendar, NgbDate, NgbDateParserFormatter, NgbTimeStruct } from '@ng-bootstrap/ng-bootstrap';
+import * as snippet from 'app/main/forms/form-elements/date-time-picker/date-time-picker.snippetcode';
 import { ReportFromMachineService } from 'app/main/pages/report/report-from-machine/report-from-machine.service';
 
 @Component({
@@ -19,13 +21,23 @@ export class ReportFromMachineComponent implements OnInit {
   // Public
   public sidebarToggleRef = false;
   public rows;
-  public selectedOption = 10;
+  public selectedOption = 50;
   public ColumnMode = ColumnMode;
+
   public temp = [];
   public previousRoleFilter = '';
   public previousPlanFilter = '';
   public previousStatusFilter = '';
+
   public exportCSVData;
+  public matchineData;
+
+  // Range selection Date Picker
+  public hoveredDate: NgbDate | null = null;
+  public fromDate: NgbDate | null;
+  public toDate: NgbDate | null;
+
+  public _snippetCodeRangeSelectionDP = snippet.snippetCodeRangeSelectionDP;
 
   public selectBatch: any = [
     { name: 'All', value: '' },
@@ -64,13 +76,85 @@ export class ReportFromMachineComponent implements OnInit {
   constructor(
     private _reportFromMachineService: ReportFromMachineService,
     private _coreSidebarService: CoreSidebarService,
-    private _coreConfigService: CoreConfigService
+    private _coreConfigService: CoreConfigService,
+    private _reportService: ReportService, 
+    private calendar: NgbCalendar,
+    public formatter: NgbDateParserFormatter 
   ) {
     this._unsubscribeAll = new Subject();
+    this.fromDate = calendar.getToday();
+    this.toDate = calendar.getToday();
   }
 
   // Public Methods
   // -----------------------------------------------------------------------------------------------------
+
+  /**
+   * Range selection Date Picker
+   *
+   * @param date
+   */
+   onDateSelection(date: NgbDate, datepicker: any) {
+    if (!this.fromDate && !this.toDate) {
+      this.fromDate = date;
+    } else if (this.fromDate && !this.toDate && date && date.after(this.fromDate)) {
+      this.toDate = date;
+      this.serchReportMatchine();
+      datepicker.close();
+    } else {
+      this.toDate = null;
+      this.fromDate = date;
+    }
+  }
+
+  /**
+   * Is Hovered
+   *
+   * @param date
+   */
+   isHovered(date: NgbDate) {
+    return (
+      this.fromDate && !this.toDate && this.hoveredDate && date.after(this.fromDate) && date.before(this.hoveredDate)
+    );
+  }
+
+  /**
+   * Is Inside
+   *
+   * @param date
+   */
+  isInside(date: NgbDate) {
+    return this.toDate && date.after(this.fromDate) && date.before(this.toDate);
+  }
+
+  /**
+   *  Is Range
+   *
+   * @param date
+   */
+  isRange(date: NgbDate) {
+    return (
+      date.equals(this.fromDate) ||
+      (this.toDate && date.equals(this.toDate)) ||
+      this.isInside(date) ||
+      this.isHovered(date)
+    );
+  }
+
+  /**
+   *  Format date to yyyy-mm-dd
+   *
+   * @param date
+   */
+  dateFormat(date) {
+    let day;
+    if (date.day < 10){
+      day = "0" + date.day;
+    }else {
+      day = date.day;
+    }
+    return date.year + "-" + date.month + "-" + day;
+  }
 
   /**
    * filterUpdate
@@ -152,6 +236,24 @@ export class ReportFromMachineComponent implements OnInit {
       return isPartialFumberMatch;
     });
   }
+
+  /**
+   * Set Select Grade
+   */
+   serchReportMatchine(){
+    this._reportService
+      .getReportDaily(this.dateFormat(this.fromDate), this.dateFormat(this.toDate))
+      .pipe()
+      .subscribe(
+        (Response) => {
+          let data = Response.data.data;
+          this.matchineData = data;
+          this.tempData = this.matchineData;
+          this.exportCSVData = this.matchineData;
+        },
+        (error) => console.log(error)
+      );
+  }
   
   // Lifecycle Hooks
   // -----------------------------------------------------------------------------------------------------
@@ -176,7 +278,7 @@ export class ReportFromMachineComponent implements OnInit {
           this.rows = response;
           this.tempData = this.rows;
           this.exportCSVData = this.rows;
-          console.log(response);
+          // console.log(response);
         });
       }
     });

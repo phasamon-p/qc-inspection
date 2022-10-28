@@ -1,11 +1,13 @@
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ColumnMode, DatatableComponent } from '@swimlane/ngx-datatable';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { CoreConfigService } from '@core/services/config.service';
-import { CoreSidebarService } from '@core/components/core-sidebar/core-sidebar.service';
+import { JobNumberService } from "app/auth/service";
+import { ReportService } from "app/auth/service";
 
 import { JobSummaryReportService } from 'app/main/pages/report/job-summary-report/job-summary-report.service';
 
@@ -26,6 +28,13 @@ export class JobSummaryReportComponent implements OnInit {
   public previousPlanFilter = '';
   public previousStatusFilter = '';
   public exportCSVData;
+  public summaryReport;
+
+  public ReactiveUserDetailsForm: UntypedFormGroup;
+
+  public jobNumber: Array<any>;
+  public selectjobNumberLoading = false;
+  public jobNumberValue;
 
   public selectFNumber: any = [
     { name: 'All', value: '' },
@@ -69,18 +78,22 @@ export class JobSummaryReportComponent implements OnInit {
   // Private
   private tempData = [];
   private _unsubscribeAll: Subject<any>;
-
+  JobNumberService
   /**
    * Constructor
    *
+   * @param {JobNumberService} _jobNumberService
+   * @param {ReportService} _reportService
    * @param {CoreConfigService} _coreConfigService
    * @param {JobSummaryReportService} _jobSummaryReportService
-   * @param {CoreSidebarService} _coreSidebarService
+   * @param {UntypedFormBuilder} formBuilder
    */
   constructor(
+    private _jobNumberService: JobNumberService,
     private _jobSummaryReportService: JobSummaryReportService,
-    private _coreSidebarService: CoreSidebarService,
-    private _coreConfigService: CoreConfigService
+    private __reportService : ReportService,
+    private _coreConfigService: CoreConfigService,
+    private formBuilder: UntypedFormBuilder,
   ) {
     this._unsubscribeAll = new Subject();
   }
@@ -201,12 +214,50 @@ export class JobSummaryReportComponent implements OnInit {
     });
   }
 
+  getJobNumber(){
+    // api Pallet Service
+    this.selectjobNumberLoading = true;
+    this._jobNumberService.getJobNumber()
+      .pipe()
+      .subscribe(responce => {
+        let array = [];
+        for (let key in responce.data) {
+          let p = { name: responce.data[key] }
+          array.push(p);
+        }
+        this.jobNumber = array;
+      });
+    this.selectjobNumberLoading = false;
+  }
+
+  public changJobNumber() {
+    // api Get Summary Report
+    this.__reportService.getSummaryReport(this.jobNumberValue.name)
+      .pipe()
+      .subscribe(Response => {
+        let data = Response.data.data;
+        this.summaryReport = data;
+        this.tempData = this.summaryReport;
+        this.exportCSVData = this.summaryReport;
+      });
+    
+  }
+  
   // Lifecycle Hooks
   // -----------------------------------------------------------------------------------------------------
   /**
    * On init
    */
   ngOnInit(): void {
+    // Reactive form initialization
+    this.ReactiveUserDetailsForm = this.formBuilder.group(
+      {
+        jobnumber: [{ name: null }, Validators.required],
+
+      }
+    );
+    this.ReactiveUserDetailsForm.reset();
+    this.getJobNumber();
     // Subscribe config change
     this._coreConfigService.config.pipe(takeUntil(this._unsubscribeAll)).subscribe(config => {
       //! If we have zoomIn route Transition then load datatable after 450ms(Transition will finish in 400ms)

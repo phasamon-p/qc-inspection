@@ -12,11 +12,16 @@
                             <div class="row">
                                 <!-- Job Number -->
                                 <div class="col-md-6 col-12 ">
-                                    <div class="align-items-center pb-1">
-                                        <label class="d-flex align-items-center">Job Number:</label>
-                                        <input [(ngModel)]="searchJobNumber" name="searchJobNumber" type="search"
-                                            class="form-control" (keyup)="filterJobNumber($event)"
-                                            (search)="filterJobNumber($event)" disabled/>
+                                    <div class="form-group">
+                                        <label for="UDPalletNumber">Job Number</label>     
+                                        <ng-select [items]="jobNumber" 
+                                        [(ngModel)]="jobNumberValue" 
+                                        name="jobNumberValue"
+                                        
+                                        bindLabel="name" 
+                                        (change)="changJobNumber()"
+                                        [loading]="selectjobNumberLoading"
+                                         > </ng-select>             
                                     </div>
                                 </div>
                                 <!-- Disable -->
@@ -90,13 +95,13 @@
                                 rippleEffect>Preview</a>
                         </div>
                         <div class="d-flex align-items-center justify-content-end pr-1 pb-1 pb-md-0">
-                            <a csvLink [data]="exportCSVData" class="btn btn-outline-secondary float-right"
+                            <a class="btn btn-outline-secondary float-right"
                                 rippleEffect>Export CSV</a>
                         </div>
                     </div>
                 </div>
                 
-                <ngx-datatable [rows]="rows" [rowHeight]="50" class="bootstrap core-bootstrap" [limit]="selectedOption"
+                <ngx-datatable [rows]="summaryReport" [rowHeight]="50" class="bootstrap core-bootstrap" [limit]="selectedOption"
                     [columnMode]="ColumnMode.force" [headerHeight]="50" [footerHeight]="50" [scrollbarH]="true">
                     <!-- action -->
                     <ngx-datatable-column name="Actions" [width]="40" [sortable]="false">
@@ -114,44 +119,44 @@
                         </ng-template>
                       </ngx-datatable-column>
                     <!-- Job ID -->
-                    <ngx-datatable-column name="Job ID" prop="jobid" [width]="100"></ngx-datatable-column>
+                    <ngx-datatable-column name="Job ID" prop="job_no" [width]="100"></ngx-datatable-column>
                     <!-- Job Name -->
-                    <ngx-datatable-column name="Job Name" prop="jobname" [width]="300"></ngx-datatable-column>
+                    <ngx-datatable-column name="Job Name" prop="job_name" [width]="350"></ngx-datatable-column>
                     <!-- F Number -->
-                    <ngx-datatable-column name="F Number" prop="fnumber" [width]="150"></ngx-datatable-column>
+                    <ngx-datatable-column name="F Number" prop="f_Number" [width]="150"></ngx-datatable-column>
                     <!-- Job Quantity -->
-                    <ngx-datatable-column name="Job Quantity" prop="jobquantity" [width]="150"></ngx-datatable-column>
+                    <ngx-datatable-column name="Job Quantity" prop="job_Qty" [width]="150"></ngx-datatable-column>
                     <!-- E -->
-                    <ngx-datatable-column name="E" prop="e" [width]="100"></ngx-datatable-column>
+                    <ngx-datatable-column name="E" prop="delta" [width]="100"></ngx-datatable-column>
                     <!-- Grade -->
                     <ngx-datatable-column name="Grade" prop="grade" [width]="100"></ngx-datatable-column>
                     <!-- Pallet Number -->
-                    <ngx-datatable-column name="Pallet No." prop="palletnumber" [width]="150"></ngx-datatable-column>
+                    <ngx-datatable-column name="Pallet No." prop="pallet_no" [width]="150"></ngx-datatable-column>
                     <!-- Pallet Quantity -->
-                    <ngx-datatable-column name="Pallet Quantity (pcs)" prop="palletquantity" [width]="200">
+                    <ngx-datatable-column name="Pallet Quantity (pcs)" prop="pallet_Qty" [width]="200">
                     </ngx-datatable-column>
                     <!-- Inspect -->
-                    <ngx-datatable-column name="Inspect (pcs)" prop="inspect" [width]="150"></ngx-datatable-column>
+                    <ngx-datatable-column name="Inspect (pcs)" prop="inspect_Qty" [width]="150"></ngx-datatable-column>
                     <!-- Pick Out -->
-                    <ngx-datatable-column name="Pick Out (pcs)" prop="pickout" [width]="200"></ngx-datatable-column>
+                    <ngx-datatable-column name="Pick Out (pcs)" prop="pick_Out" [width]="200"></ngx-datatable-column>
                     <!-- Accepted -->
-                    <ngx-datatable-column name="Accepted (pcs)" prop="accepted" [width]="200"></ngx-datatable-column>
+                    <ngx-datatable-column name="Accepted (pcs)" prop="appcept_Qty" [width]="200"></ngx-datatable-column>
                     <!-- Rejected -->
-                    <ngx-datatable-column name="Rejected (pcs)" prop="rejected" [width]="200"></ngx-datatable-column>
+                    <ngx-datatable-column name="Rejected (pcs)" prop="reject_Qty" [width]="200"></ngx-datatable-column>
                     <!-- Waste Ratio -->
-                    <ngx-datatable-column name="Waste Ratio" prop="wasteratio" [width]="150"></ngx-datatable-column>
+                    <ngx-datatable-column name="Waste Ratio" prop="waste_ratio" [width]="150"></ngx-datatable-column>
                     <!-- Black -->
-                    <ngx-datatable-column name="Black (pcs)" prop="black" [width]="150"></ngx-datatable-column>
+                    <ngx-datatable-column name="Black (pcs)" prop="black_" [width]="150"></ngx-datatable-column>
                     <!-- Color -->
-                    <ngx-datatable-column name="Color (pcs)" prop="color" [width]="150"></ngx-datatable-column>
+                    <ngx-datatable-column name="Color (pcs)" prop="colors_" [width]="150"></ngx-datatable-column>
                     <!-- Measure -->
-                    <ngx-datatable-column name="Measure (pcs)" prop="measure" [width]="200"></ngx-datatable-column>
+                    <ngx-datatable-column name="Measure (pcs)" prop="measure_" [width]="200"></ngx-datatable-column>
                     <!-- Mark Error -->
-                    <ngx-datatable-column name="Mark Error (pcs)" prop="markerror" [width]="200"></ngx-datatable-column>
+                    <ngx-datatable-column name="Mark Error (pcs)" prop="mark_err" [width]="200"></ngx-datatable-column>
                     <!-- White -->
-                    <ngx-datatable-column name="White (pcs)" prop="white" [width]="150"></ngx-datatable-column>
+                    <ngx-datatable-column name="White (pcs)" prop="white_" [width]="150"></ngx-datatable-column>
                     <!-- Batch -->
-                    <ngx-datatable-column name="Batch" prop="batch" [width]="230"></ngx-datatable-column>
+                    <ngx-datatable-column name="Batch" prop="batch_no" [width]="230"></ngx-datatable-column>
 
 
                     <!-- Users -->

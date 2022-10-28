@@ -1,12 +1,11 @@
 import { Component, OnInit, ViewChild, ViewEncapsulation } from "@angular/core";
-import { ColumnMode, DatatableComponent } from "@swimlane/ngx-datatable";
+import { ColumnMode, DatatableComponent, SelectionType } from "@swimlane/ngx-datatable";
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { CoreConfigService } from "@core/services/config.service";
 import { CoreSidebarService } from "@core/components/core-sidebar/core-sidebar.service";
 import { ReportService } from "app/auth/service";
 import { NgbDateStruct, NgbCalendar, NgbDate, NgbDateParserFormatter, NgbTimeStruct } from '@ng-bootstrap/ng-bootstrap';
-
 import * as snippet from 'app/main/forms/form-elements/date-time-picker/date-time-picker.snippetcode';
 
 @Component({
@@ -20,6 +19,8 @@ export class DailyReportComponent implements OnInit {
   public rows;
   public selectedOption = 50;
   public ColumnMode = ColumnMode;
+  public SelectionType = SelectionType;
+  public selected = [];
 
   public jobName = "";
 
@@ -42,10 +43,13 @@ export class DailyReportComponent implements OnInit {
   public selectedChecker = [];
 
   public searchValue = "";
+  public jobNumberValue = "";
   
   public searchFromDate = "";
   public searchEndDate = "";
   public searchJobNumber = "";
+
+  public totalCount ="";
 
    // Range selection Date Picker
    public hoveredDate: NgbDate | null = null;
@@ -95,8 +99,6 @@ export class DailyReportComponent implements OnInit {
       this.toDate = null;
       this.fromDate = date;
     }
-
-    
   }
 
   /**
@@ -148,59 +150,23 @@ export class DailyReportComponent implements OnInit {
     return date.year + "-" + date.month + "-" + day;
   }
 
-
   /**
    * filterUpdate
    *
    * @param event
    */
   filterUpdate(event) {
-    // Reset ng-select on search
-    // this.selectedFnumber = this.selectFNumber[0];
-    // this.selectedGrade = this.selectGrade[0];
-    // this.selectedChecker = this.selectChecker[0];
-
-    const val = event.target.value.toLowerCase();
-
-    // Filter Our Data
-    const temp = this.tempData.filter(function (d) {
-      return (
-        d.job_name.toLowerCase().indexOf(val) !== -1 ||
-        !val ||
-        d.batch_no.toLowerCase().indexOf(val) !== -1 ||
-        !val ||
-        d.pallet_no.toLowerCase().indexOf(val) !== -1 ||
-        !val ||
-        d.remark_txt.toLowerCase().indexOf(val) !== -1 ||
-        !val
-      );
-    });
+    const filter = event.target.value;
+    this.previousSerchFilter = filter;
+    this.temp = this.filterRows(
+      this.previousJobNumberFilter,
+      this.previousFNumberFilter,
+      this.previousGradeFilter,
+      this.previousCheckerFilter,
+      filter
+    );
     // Update The Rows
-    this.dailyData = temp;
-    // Whenever The Filter Changes, Always Go Back To The First Page
-    this.table.offset = 0;
-  }
-
-  /**
-   * filterUpdate
-   *
-   * @param event
-   */
-  filterJobNumber(event) {
-    // Reset ng-select on search
-    // this.selectedFnumber = this.selectFNumber[0];
-    // this.selectedGrade = this.selectGrade[0];
-    // this.selectedChecker = this.selectChecker[0];
-
-    const val = event.target.value.toLowerCase();
-
-    // Filter Our Data
-    const temp = this.tempData.filter(function (d) {
-      return d.job_no.toLowerCase().indexOf(val) !== -1 || !val;
-    });
-
-    // Update The Rows
-    this.dailyData = temp;
+    this.dailyData = this.temp;
     // Whenever The Filter Changes, Always Go Back To The First Page
     this.table.offset = 0;
   }
@@ -212,13 +178,16 @@ export class DailyReportComponent implements OnInit {
    */
    filterByJobNumber(event) {
     const filter = event.target.value;
+    console.log(filter)
     this.previousJobNumberFilter = filter;
     this.temp = this.filterRows(
       filter,
       this.previousFNumberFilter,
       this.previousGradeFilter,
-      this.previousCheckerFilter
+      this.previousCheckerFilter,
+      this.previousSerchFilter
     );
+    console.log("Job Number Filter : " + this.temp)
     // Update The Rows
     this.dailyData = this.temp;
     // Whenever The Filter Changes, Always Go Back To The First Page
@@ -233,6 +202,15 @@ export class DailyReportComponent implements OnInit {
     }
   }
 
+  onActivate(event) {
+    if(event.type == 'click') {
+        console.log(event);
+    }
+  }
+  onSelect({ selected }) {
+    console.log('Select Event', selected, this.selected);
+  }
+
   /**
    * Filter By F Number
    *
@@ -240,13 +218,13 @@ export class DailyReportComponent implements OnInit {
    */
   filterByFnumber(event) {
     const filter = event ? event.value : "";
-    console.log("Job Number Filter : " + filter)
     this.previousFNumberFilter = filter;
     this.temp = this.filterRows(
       this.previousJobNumberFilter,
       filter,
       this.previousGradeFilter,
-      this.previousCheckerFilter
+      this.previousCheckerFilter,
+      this.previousSerchFilter
     );
     // Update The Rows
     this.dailyData = this.temp;
@@ -266,7 +244,8 @@ export class DailyReportComponent implements OnInit {
       this.previousJobNumberFilter,
       this.previousFNumberFilter,
       filter,
-      this.previousCheckerFilter
+      this.previousCheckerFilter,
+      this.previousSerchFilter
     );
     // Update The Rows
     this.dailyData = this.temp;
@@ -286,7 +265,8 @@ export class DailyReportComponent implements OnInit {
       this.previousJobNumberFilter,
       this.previousFNumberFilter,
       this.previousGradeFilter,
-      filter
+      filter,
+      this.previousSerchFilter
     );
     // Update The Rows
     this.dailyData = this.temp;
@@ -301,14 +281,16 @@ export class DailyReportComponent implements OnInit {
    * @param fNumberFilter
    * @param gradeFilter
    * @param checkerFilter
+   * @param searchFilter
    */
-  filterRows(jobNumberFilter, fNumberFilter, gradeFilter, checkerFilter): any[] {
+  filterRows(jobNumberFilter, fNumberFilter, gradeFilter, checkerFilter, searchFilter): any[] {
 
     jobNumberFilter = jobNumberFilter.toLowerCase();
     fNumberFilter = fNumberFilter.toLowerCase();
     gradeFilter = gradeFilter.toLowerCase();
     checkerFilter = checkerFilter.toLowerCase();
-
+    searchFilter = searchFilter.toLowerCase();
+    console.log(jobNumberFilter)
     return this.tempData.filter((row) => {
       const isPartialJobNumberMatch =
         row.job_no.toLowerCase().indexOf(jobNumberFilter) !== -1 ||
@@ -317,12 +299,17 @@ export class DailyReportComponent implements OnInit {
         row.f_Number.toLowerCase().indexOf(fNumberFilter) !== -1 ||
         !fNumberFilter;
       const isPartialGradeMatch =
-        row.grade.toLowerCase().indexOf(gradeFilter) !== -1 || !gradeFilter;
+        row.grade.toLowerCase().indexOf(gradeFilter) !== -1 || 
+        !gradeFilter;
       const isPartialCheckerMatch =
         row.checkker_name.toLowerCase().indexOf(checkerFilter) !== -1 ||
         !checkerFilter;
+      const isPartialSerchMatch =
+        row.pallet_no.toLowerCase().indexOf(searchFilter) !== -1 ||
+        !searchFilter;
+      
       return (
-        isPartialJobNumberMatch && isPartialFumberMatch && isPartialGradeMatch && isPartialCheckerMatch
+        isPartialJobNumberMatch && isPartialFumberMatch && isPartialGradeMatch && isPartialCheckerMatch && isPartialSerchMatch
       );
     });
   }
