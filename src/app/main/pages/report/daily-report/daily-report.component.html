@@ -85,8 +85,9 @@
                                 <div class="col-12 col-md-4">
                                     <fieldset class="form-group">
                                         <label class="d-flex align-items-center" hidden>F Number:</label>
-                                        <ng-select [items]="selectFNumber" [(ngModel)]="selectedFnumber"
-                                            name="selectedFnumber" bindLabel="name" placeholder="Select F Number"
+                                        <ng-select [items]="selectFNumber"             
+                                            [(ngModel)]="selectedFnumber" name="selectedFnumber" 
+                                            bindLabel="name" placeholder="Select F Number"
                                             (change)="filterByFnumber($event)">
                                         </ng-select>
                                     </fieldset>
@@ -159,10 +160,7 @@
                     [scrollbarH]="true"
                     [selected]="selected"
                     [selectionType]="SelectionType.single"
-                    (activate)="onActivate($event)"
-                    (select)='onSelect($event)'
-                    
-                    >
+                    (activate)="onActivate($event)">
                     <!-- action -->
                     <ngx-datatable-column name="Actions" [width]="40" [sortable]="false">
                         <ng-template ngx-datatable-cell-template let-row="row" let-rowIndex='rowIndex'>

@@ -1,15 +1,10 @@
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { ColumnMode, DatatableComponent } from '@swimlane/ngx-datatable';
+import { ColumnMode, DatatableComponent, SelectionType } from '@swimlane/ngx-datatable';
 
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 
-import { CoreConfigService } from '@core/services/config.service';
-import { CoreSidebarService } from '@core/components/core-sidebar/core-sidebar.service';
 import { ReportService } from "app/auth/service";
-import { NgbDateStruct, NgbCalendar, NgbDate, NgbDateParserFormatter, NgbTimeStruct } from '@ng-bootstrap/ng-bootstrap';
-import * as snippet from 'app/main/forms/form-elements/date-time-picker/date-time-picker.snippetcode';
-import { ReportFromMachineService } from 'app/main/pages/report/report-from-machine/report-from-machine.service';
+import { NgbCalendar, NgbDate, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-report-from-machine',
@@ -19,45 +14,33 @@ import { ReportFromMachineService } from 'app/main/pages/report/report-from-mach
 })
 export class ReportFromMachineComponent implements OnInit {
   // Public
-  public sidebarToggleRef = false;
-  public rows;
   public selectedOption = 50;
   public ColumnMode = ColumnMode;
+  public SelectionType = SelectionType;
+  public selected = [];
 
+  
+  // Filter Variable
   public temp = [];
-  public previousRoleFilter = '';
-  public previousPlanFilter = '';
-  public previousStatusFilter = '';
+  public previousJobNumberFilter = "";
+  public previousBatchFilter = "";
+  public previousSerchFilter = "";
 
-  public exportCSVData;
+  // Data Variable
   public matchineData;
+  public exportCSVData;
+  public selectBatch: Array<any>;
+  
+  // ngModel
+  public searchJobNumber = '';
+  public jobName = "";
+  public selectedBatch = [];
+  public searchValue = '';
 
   // Range selection Date Picker
   public hoveredDate: NgbDate | null = null;
   public fromDate: NgbDate | null;
   public toDate: NgbDate | null;
-
-  public _snippetCodeRangeSelectionDP = snippet.snippetCodeRangeSelectionDP;
-
-  public selectBatch: any = [
-    { name: 'All', value: '' },
-    { name: 'Run-001', value: 'Run-001' },
-    { name: 'Run-002', value: 'Run-002' },
-    { name: 'Run-003', value: 'Run-003' },
-    { name: 'Run-004', value: 'Run-004' },
-    { name: 'Run-005', value: 'Run-005' },
-    { name: 'Run-006', value: 'Run-006' },
-    { name: 'Run-007', value: 'Run-007' },
-    { name: 'Run-008', value: 'Run-008' },
-    { name: 'Run-009', value: 'Run-009' },
-    { name: 'Run-010', value: 'Run-0010' }
-  ];
-
-  public selectedBatch = [];
-  public searchValue = '';
-  public searchFromDate = '';
-  public searchEndDate = '';
-  public searchJobNumber = '';
 
   // Decorator
   @ViewChild(DatatableComponent) table: DatatableComponent;
@@ -69,14 +52,11 @@ export class ReportFromMachineComponent implements OnInit {
   /**
    * Constructor
    *
-   * @param {CoreConfigService} _coreConfigService
-   * @param {ReportFromMachineService} _reportFromMachineService
-   * @param {CoreSidebarService} _coreSidebarService
+   * @param {ReportService} _reportService
+   * @param {NgbCalendar} calendar
+   * @param {NgbDateParserFormatter} formatter
    */
   constructor(
-    private _reportFromMachineService: ReportFromMachineService,
-    private _coreSidebarService: CoreSidebarService,
-    private _coreConfigService: CoreConfigService,
     private _reportService: ReportService, 
     private calendar: NgbCalendar,
     public formatter: NgbDateParserFormatter 
@@ -157,48 +137,50 @@ export class ReportFromMachineComponent implements OnInit {
   }
 
   /**
-   * filterUpdate
+   * Filter Search (Pallet Number)
    *
    * @param event
    */
   filterUpdate(event) {
-    // Reset ng-select on search
-    this.selectedBatch = this.selectBatch[0];
-
-    const val = event.target.value.toLowerCase();
-
-    // Filter Our Data
-    const temp = this.tempData.filter(function (d) {
-      return (d.jobname.toLowerCase().indexOf(val) !== -1 || !val) ||
-        (d.date.toLowerCase().indexOf(val) !== -1 || !val);
-    });
-
+    const filter = event.target.value;
+    this.previousSerchFilter = filter;
+    this.temp = this.filterRows(
+      this.previousJobNumberFilter,
+      this.previousBatchFilter,
+      filter
+    );
     // Update The Rows
-    this.rows = temp;
+    this.matchineData = this.temp;
     // Whenever The Filter Changes, Always Go Back To The First Page
     this.table.offset = 0;
   }
 
+  
   /**
-   * filterUpdate
+   * Filter By Job Number
    *
    * @param event
    */
-  filterJobNumber(event) {
-    // Reset ng-select on search
-    this.selectedBatch = this.selectBatch[0];
-
-    const val = event.target.value.toLowerCase();
-
-    // Filter Our Data
-    const temp = this.tempData.filter(function (d) {
-      return (d.jobid.toLowerCase().indexOf(val) !== -1 || !val);
-    });
-
+   filterByJobNumber(event) {
+    const filter = event.target.value;
+    this.previousJobNumberFilter = filter;
+    this.temp = this.filterRows(
+      filter,
+      this.previousBatchFilter,
+      this.previousSerchFilter
+    );
     // Update The Rows
-    this.rows = temp;
+    this.matchineData = this.temp;
     // Whenever The Filter Changes, Always Go Back To The First Page
     this.table.offset = 0;
+    
+    for (let key in this.matchineData) {
+      if(filter.toLowerCase() == this.matchineData[key].job_no.toLowerCase()){
+        this.jobName = this.matchineData[key].job_name;
+      }else{
+        this.jobName = "";
+      }
+    }
   }
 
   /**
@@ -208,9 +190,16 @@ export class ReportFromMachineComponent implements OnInit {
    */
    filterByBatch(event) {
     const filter = event ? event.value : '';
-    this.previousRoleFilter = filter;
-    this.temp = this.filterRows(filter, this.previousPlanFilter, this.previousStatusFilter);
-    this.rows = this.temp;
+    this.previousBatchFilter = filter;
+    this.temp = this.filterRows(
+      this.previousJobNumberFilter,
+      filter,
+      this.previousSerchFilter
+      );
+    // Update The Rows
+    this.matchineData = this.temp;
+    // Whenever The Filter Changes, Always Go Back To The First Page
+    this.table.offset = 0;
   }
 
   /**
@@ -220,21 +209,39 @@ export class ReportFromMachineComponent implements OnInit {
    * @param gradeFilter
    * @param checkerFilter
    */
-  filterRows(batchFilter, gradeFilter, checkerFilter): any[] {
-    // Reset search on select change
-    this.searchValue = '';
-    this.searchFromDate = '';
-    this.searchEndDate = '';
-    this.searchJobNumber = '';
+  filterRows(jobNumberFilter, batchFilter, searchFilter): any[] {
 
+    jobNumberFilter = jobNumberFilter.toLowerCase();
     batchFilter = batchFilter.toLowerCase();
-    gradeFilter = gradeFilter.toLowerCase();
-    checkerFilter = checkerFilter.toLowerCase();
 
     return this.tempData.filter(row => {
-      const isPartialFumberMatch = row.batch.toLowerCase().indexOf(batchFilter) !== -1 || !batchFilter;
-      return isPartialFumberMatch;
+      const isPartialJobNumberMatch =
+        row.job_no.toLowerCase().indexOf(jobNumberFilter) !== -1 ||
+        !jobNumberFilter;
+      const isPartialFumberMatch = 
+        row.batch_no.toLowerCase().indexOf(batchFilter) !== -1 || 
+        !batchFilter;
+      const isPartialSerchMatch =
+        row.pallet_no.toLowerCase().indexOf(searchFilter) !== -1 ||
+        !searchFilter;
+      return isPartialJobNumberMatch && isPartialFumberMatch && isPartialSerchMatch;
     });
+  }
+
+  /**
+   * Set Select Batch
+   *
+   * @param Response
+   */
+   setBatch(Response) {
+    let array = [];
+    let first = { name: "All", value: "" };
+    array.push(first);
+    for (let key in Response) {
+      let p = { name: Response[key].batch_no, value: Response[key].batch_no };
+      array.push(p);
+    }
+    this.selectBatch = array;
   }
 
   /**
@@ -242,7 +249,7 @@ export class ReportFromMachineComponent implements OnInit {
    */
    serchReportMatchine(){
     this._reportService
-      .getReportDaily(this.dateFormat(this.fromDate), this.dateFormat(this.toDate))
+      .getMatchineReport(this.dateFormat(this.fromDate), this.dateFormat(this.toDate))
       .pipe()
       .subscribe(
         (Response) => {
@@ -250,6 +257,8 @@ export class ReportFromMachineComponent implements OnInit {
           this.matchineData = data;
           this.tempData = this.matchineData;
           this.exportCSVData = this.matchineData;
+          // Set Select Batch
+          this.setBatch(this.matchineData);
         },
         (error) => console.log(error)
       );
@@ -261,27 +270,8 @@ export class ReportFromMachineComponent implements OnInit {
    * On init
    */
    ngOnInit(): void {
-    // Subscribe config change
-    this._coreConfigService.config.pipe(takeUntil(this._unsubscribeAll)).subscribe(config => {
-      //! If we have zoomIn route Transition then load datatable after 450ms(Transition will finish in 400ms)
-      if (config.layout.animation === 'zoomIn') {
-        setTimeout(() => {
-          this._reportFromMachineService.onReportListChanged.pipe(takeUntil(this._unsubscribeAll)).subscribe(response => {
-            this.rows = response;
-            this.tempData = this.rows;
-            this.exportCSVData = this.rows;
-            console.log(response);
-          });
-        }, 450);
-      } else {
-        this._reportFromMachineService.onReportListChanged.pipe(takeUntil(this._unsubscribeAll)).subscribe(response => {
-          this.rows = response;
-          this.tempData = this.rows;
-          this.exportCSVData = this.rows;
-          // console.log(response);
-        });
-      }
-    });
+    // Search Matchine Report from today
+    this.serchReportMatchine();
   }
 
   /**

@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { ColumnMode, DatatableComponent } from '@swimlane/ngx-datatable';
+import { ColumnMode, DatatableComponent, SelectionType } from '@swimlane/ngx-datatable';
 import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 
 import { Subject } from 'rxjs';
@@ -19,55 +19,40 @@ import { JobSummaryReportService } from 'app/main/pages/report/job-summary-repor
 })
 export class JobSummaryReportComponent implements OnInit {
   // Public
-  public sidebarToggleRef = false;
   public rows;
-  public selectedOption = 10;
+  public selectedOption = 50;
   public ColumnMode = ColumnMode;
+  public SelectionType = SelectionType;
+  public selected = [];
+
+  public jobName = "";
+
   public temp = [];
-  public previousRoleFilter = '';
-  public previousPlanFilter = '';
-  public previousStatusFilter = '';
+  public previousJobNumberFilter = "";
+  public previousFNumberFilter = "";
+  public previousGradeFilter = "";
+  public previousSerchFilter = "";
+
   public exportCSVData;
   public summaryReport;
 
   public ReactiveUserDetailsForm: UntypedFormGroup;
 
-  public jobNumber: Array<any>;
+  
   public selectjobNumberLoading = false;
-  public jobNumberValue;
+  
 
-  public selectFNumber: any = [
-    { name: 'All', value: '' },
-    { name: 'F010001', value: 'F010001' },
-    { name: 'F010002', value: 'F010002' },
-    { name: 'F010003', value: 'F010003' },
-    { name: 'F010004', value: 'F010004' },
-    { name: 'F010005', value: 'F010005' }
-  ];
-
-  public selectGrade: any = [
-    { name: 'All', value: '' },
-    { name: 'A', value: 'A' },
-    { name: 'B', value: 'B' },
-    { name: 'C', value: 'C' },
-    { name: 'D', value: 'D' },
-    { name: 'E', value: 'E' },
-    { name: 'F', value: 'F' },
-    { name: 'G', value: 'G' }
-
-  ];
-
-  public selectChecker: any = [
-    { name: 'All', value: '' },
-    { name: 'นายA', value: 'นายA' },
-    { name: 'นายB', value: 'นายB' },
-    { name: 'นายC', value: 'นายC' }
-  ];
+  public jobNumber: Array<any>;
+  public selectFNumber: Array<any>;
+  public selectGrade: Array<any>;
 
   public selectedFnumber = [];
   public selectedGrade = [];
   public selectedChecker = [];
+
   public searchValue = '';
+  public jobNumberValue;
+
   public searchFromDate = '';
   public searchEndDate = '';
   public searchJobNumber = '';
@@ -106,62 +91,67 @@ export class JobSummaryReportComponent implements OnInit {
    *
    * @param event
    */
-  filterUpdate(event) {
-    // Reset ng-select on search
-    this.selectedFnumber = this.selectFNumber[0];
-    this.selectedGrade = this.selectGrade[0];
-    this.selectedChecker = this.selectChecker[0];
-
-    const val = event.target.value.toLowerCase();
-
-    // Filter Our Data
-    const temp = this.tempData.filter(function (d) {
-      return (d.jobname.toLowerCase().indexOf(val) !== -1 || !val) ||
-        (d.batch.toLowerCase().indexOf(val) !== -1 || !val) ||
-        (d.palletnumber.toLowerCase().indexOf(val) !== -1 || !val);
-    });
-
+   filterUpdate(event) {
+    const filter = event.target.value;
+    this.previousSerchFilter = filter;
+    this.temp = this.filterRows(
+      this.previousJobNumberFilter,
+      this.previousFNumberFilter,
+      this.previousGradeFilter,
+      filter
+    );
     // Update The Rows
-    this.rows = temp;
+    this.summaryReport = this.temp;
     // Whenever The Filter Changes, Always Go Back To The First Page
     this.table.offset = 0;
   }
 
-  /**
-   * filterUpdate
+   /**
+   * Filter By Job Number
    *
    * @param event
    */
-  filterJobNumber(event) {
-    // Reset ng-select on search
-    this.selectedFnumber = this.selectFNumber[0];
-    this.selectedGrade = this.selectGrade[0];
-    this.selectedChecker = this.selectChecker[0];
-
-    const val = event.target.value.toLowerCase();
-
-    // Filter Our Data
-    const temp = this.tempData.filter(function (d) {
-      return (d.jobid.toLowerCase().indexOf(val) !== -1 || !val);
-    });
-
-    // Update The Rows
-    this.rows = temp;
-    // Whenever The Filter Changes, Always Go Back To The First Page
-    this.table.offset = 0;
-  }
+    filterByJobNumber(event) {
+      const filter = event;
+      this.previousJobNumberFilter = filter;
+      this.temp = this.filterRows(
+        filter,
+        this.previousFNumberFilter,
+        this.previousGradeFilter,
+        this.previousSerchFilter
+      );
+      // Update The Rows
+      this.summaryReport = this.temp;
+      // Whenever The Filter Changes, Always Go Back To The First Page
+      this.table.offset = 0;
+      
+      for (let key in this.summaryReport) {
+        if(filter.toLowerCase() == this.summaryReport[key].job_no.toLowerCase()){
+          this.jobName = this.summaryReport[key].job_name;
+        }else{
+          this.jobName = "";
+        }
+      }
+    }
 
   /**
    * Filter By F Number
    *
    * @param event
    */
-  filterByFnumber(event) {
-    const filter = event ? event.value : '';
-    this.previousRoleFilter = filter;
-    this.temp = this.filterRows(filter, this.previousPlanFilter, this.previousStatusFilter);
-    this.rows = this.temp;
-    console.log(event)
+   filterByFnumber(event) {
+    const filter = event ? event.value : "";
+    this.previousFNumberFilter = filter;
+    this.temp = this.filterRows(
+      this.previousJobNumberFilter,
+      filter,
+      this.previousGradeFilter,
+      this.previousSerchFilter
+    );
+    // Update The Rows
+    this.summaryReport = this.temp;
+    // Whenever The Filter Changes, Always Go Back To The First Page
+    this.table.offset = 0;
   }
 
   /**
@@ -170,48 +160,83 @@ export class JobSummaryReportComponent implements OnInit {
    * @param event
    */
   filterByGrade(event) {
-    const filter = event ? event.value : '';
-    this.previousPlanFilter = filter;
-    this.temp = this.filterRows(this.previousRoleFilter, filter, this.previousStatusFilter);
-    this.rows = this.temp;
-  }
-
-  /**
-   * Filter By Checker
-   *
-   * @param event
-   */
-  filterByChecker(event) {
-    const filter = event ? event.value : '';
-    this.previousStatusFilter = filter;
-    this.temp = this.filterRows(this.previousRoleFilter, this.previousPlanFilter, filter);
-    this.rows = this.temp;
+    const filter = event ? event.value : "";
+    this.previousGradeFilter = filter;
+    this.temp = this.filterRows(
+      this.previousJobNumberFilter,
+      this.previousFNumberFilter,
+      filter,
+      this.previousSerchFilter
+    );
+    // Update The Rows
+    this.summaryReport = this.temp;
+    // Whenever The Filter Changes, Always Go Back To The First Page
+    this.table.offset = 0;
   }
 
   /**
    * Filter Rows
    *
+   * @param jobNumberFilter
    * @param fNumberFilter
    * @param gradeFilter
-   * @param checkerFilter
    */
-  filterRows(fNumberFilter, gradeFilter, checkerFilter): any[] {
-    // Reset search on select change
-    this.searchValue = '';
-    this.searchFromDate = '';
-    this.searchEndDate = '';
-    this.searchJobNumber = '';
+  filterRows(jobNumberFilter, fNumberFilter, gradeFilter, searchFilter): any[] {
 
+    jobNumberFilter = jobNumberFilter.toLowerCase();
     fNumberFilter = fNumberFilter.toLowerCase();
     gradeFilter = gradeFilter.toLowerCase();
-    checkerFilter = checkerFilter.toLowerCase();
+    searchFilter = searchFilter.toLowerCase();
 
-    return this.tempData.filter(row => {
-      const isPartialFumberMatch = row.fnumber.toLowerCase().indexOf(fNumberFilter) !== -1 || !fNumberFilter;
-      const isPartialGradeMatch = row.grade.toLowerCase().indexOf(gradeFilter) !== -1 || !gradeFilter;
-      // const isPartialCheckerMatch = row.checker.toLowerCase().indexOf(checkerFilter) !== -1 || !checkerFilter;
-      return isPartialFumberMatch && isPartialGradeMatch ;
+    return this.tempData.filter((row) => {
+      const isPartialJobNumberMatch =
+        row.job_no.toLowerCase().indexOf(jobNumberFilter) !== -1 ||
+        !jobNumberFilter;
+      const isPartialFumberMatch =
+        row.f_Number.toLowerCase().indexOf(fNumberFilter) !== -1 ||
+        !fNumberFilter;
+      const isPartialGradeMatch =
+        row.grade.toLowerCase().indexOf(gradeFilter) !== -1 || 
+        !gradeFilter;
+      const isPartialSerchMatch =
+        row.pallet_no.toLowerCase().indexOf(searchFilter) !== -1 ||
+        !searchFilter;
+      return (
+        isPartialJobNumberMatch && isPartialFumberMatch && isPartialGradeMatch && isPartialSerchMatch
+      );
     });
+  }
+
+  /**
+   * Set Select FNumber
+   *
+   * @param Response
+   */
+   setFNumber(Response) {
+    let array = [];
+    let first = { name: "All", value: "" };
+    array.push(first);
+    for (let key in Response) {
+      let p = { name: Response[key].f_Number, value: Response[key].f_Number };
+      array.push(p);
+    }
+    this.selectFNumber = array;
+  }
+
+  /**
+   * Set Select Grade
+   *
+   * @param Response
+   */
+  setGrade(Response) {
+    let array = [];
+    let first = { name: "All", value: "" };
+    array.push(first);
+    for (let key in Response) {
+      let p = { name: Response[key].grade, value: Response[key].grade };
+      array.push(p);
+    }
+    this.selectGrade = array;
   }
 
   getJobNumber(){
@@ -230,7 +255,7 @@ export class JobSummaryReportComponent implements OnInit {
     this.selectjobNumberLoading = false;
   }
 
-  public changJobNumber() {
+  changJobNumber() {
     // api Get Summary Report
     this.__reportService.getSummaryReport(this.jobNumberValue.name)
       .pipe()
@@ -239,8 +264,16 @@ export class JobSummaryReportComponent implements OnInit {
         this.summaryReport = data;
         this.tempData = this.summaryReport;
         this.exportCSVData = this.summaryReport;
-      });
+        // Set Select F Number
+        this.setFNumber(this.summaryReport);
+        // Set Select Grade
+        this.setGrade(this.summaryReport);
+        // Set Fitter Attribute
+        this.filterByJobNumber(this.jobNumberValue.name);
     
+      });
+
+      
   }
   
   // Lifecycle Hooks

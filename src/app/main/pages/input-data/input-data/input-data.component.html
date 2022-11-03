@@ -3,7 +3,7 @@
         <!-- Import Pallet -->
         <div class="col-md-6">
             <form [formGroup]="ReactiveUserDetailsForm" (ngSubmit)="ReactiveUDFormOnSubmit()">
-                <core-card-snippet [snippetCode]="_snippetCodeReactiveForms">
+                <core-card-snippet>
                     <h4 class="card-title">Import Pallet</h4>
                     <div class="card-body">
                         <div class="row">
@@ -70,13 +70,20 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="UDJobNumber">Job Number</label>
-                                    <input type="text" id="UDJobNumber" formControlName="jobnumber" class="form-control"
+                                    <!-- input type when reject pallet is no -->
+                                    <input *ngIf="ReactiveUserDetailsForm.value.rejectpallet == 'false'" type="text" id="UDJobNumber" formControlName="jobnumber" class="form-control"
                                         [ngClass]="{ 'is-invalid': ReactiveUDFormSubmitted && ReactiveUDForm.jobnumber.errors }" />
+                                    <!-- select type when reject pallet is yes -->
+                                    <ng-select *ngIf="ReactiveUserDetailsForm.value.rejectpallet == 'true'" [items]="jobNumberSelect" formControlName="jobnumber"
+                                     bindLabel="name" [loading]="selectjobNumberLoading"
+                                     (change)="changJobNumber()"
+                                     > </ng-select>
                                     <div *ngIf="ReactiveUDFormSubmitted && ReactiveUDForm.jobnumber.errors"
                                         class="invalid-feedback">
                                         <div *ngIf="ReactiveUDForm.jobnumber.errors.required">Job Nunber is
                                             required</div>
                                     </div>
+                                          
                                 </div>
                             </div>
                             <div class="col-md-12">
@@ -157,7 +164,7 @@
         <!-- Inspection Information -->
         <div class="col-md-6">
             <form [formGroup]="ReactiveUserDetailsForm" (ngSubmit)="ReactiveUDFormOnSubmit()">
-                <core-card-snippet [snippetCode]="_snippetCodeReactiveForms">
+                <core-card-snippet>
                     <h4 class="card-title">Inspection Information</h4>
                     <div class="card-body">
                         <div class="row">
@@ -202,10 +209,6 @@
                                         (change)="changBatch()">
                                         <option *ngFor="let batch of batchList" [value]="batch">{{batch}}
                                         </option>
-                                        <!-- <option value="USA">USA</option>
-                                        <option value="Germany">Germany</option>
-                                        <option value="Russia">Russia</option>
-                                        <option value="UK">UK</option> -->
                                     </select>
                                     <div *ngIf="ReactiveUDFormSubmitted && ReactiveUDForm.batch.errors"
                                         class="invalid-feedback">

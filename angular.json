@@ -40,7 +40,7 @@
               "bs-stepper",
               "feather-icons"
             ],
-            "outputPath": "dist/vuexy",
+            "outputPath": "dist/QC-Inspection",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
