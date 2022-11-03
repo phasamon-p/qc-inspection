@@ -56,6 +56,16 @@
                 <div class="card-body">
                     <p>Developing a graph!</p>
                 </div>
+                <div hidden>
+                    <gc-spread-sheets [hostStyle]="hostStyle" (workbookInitialized)="initSpread($event)">
+                    </gc-spread-sheets >
+                    
+                </div>
+                <div class="options-container">
+                    <div class="option-row">
+                        <input type="button" value="Print" id="btnPrint" (click) = "handelPrint()" />
+                    </div>
+                </div>
             </div>
             
         </section>

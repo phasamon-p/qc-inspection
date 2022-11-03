@@ -31,6 +31,8 @@ import { AnimatedCustomContextMenuComponent } from './main/extensions/context-me
 import { BasicCustomContextMenuComponent } from './main/extensions/context-menu/custom-context-menu/basic-custom-context-menu/basic-custom-context-menu.component';
 import { SubMenuCustomContextMenuComponent } from './main/extensions/context-menu/custom-context-menu/sub-menu-custom-context-menu/sub-menu-custom-context-menu.component';
 
+import { SpreadSheetsModule } from '@grapecity/spread-sheets-angular';
+
 const appRoutes: Routes = [
   {
     path: 'dashboard',
@@ -116,7 +118,8 @@ const appRoutes: Routes = [
         CoreThemeCustomizerModule,
         CardSnippetModule,
         LayoutModule,
-        ContentHeaderModule
+        ContentHeaderModule,
+        SpreadSheetsModule
     ],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

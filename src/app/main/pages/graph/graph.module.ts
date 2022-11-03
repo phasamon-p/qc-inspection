@@ -24,6 +24,8 @@ import { InvoiceModule } from 'app/main/apps/invoice/invoice.module';
 import { JobSummaryGraphComponent } from 'app/main/pages/graph/job-summary-graph/job-summary-graph.component';
 import { JobSummaryGraphService } from 'app/main/pages/graph/job-summary-graph/job-summary-graph.service';
 
+import { SpreadSheetsModule } from '@grapecity/spread-sheets-angular';
+
 const routes: Routes = [
   {
     path: 'jobsummary-graph',
@@ -56,7 +58,8 @@ const routes: Routes = [
     CoreDirectivesModule,
     InvoiceModule,
     CoreSidebarModule,
-    CsvModule
+    CsvModule,
+    SpreadSheetsModule
   ],
    // providers: [ProfileService]
 })
